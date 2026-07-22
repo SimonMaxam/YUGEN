@@ -1,16 +1,16 @@
 import Link from "next/link";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { Plate, type PlateTone } from "@/components/ui/Plate";
+import { Photo } from "@/components/ui/Photo";
 import { site } from "@/lib/site";
 
-const tiles: { tone: PlateTone; kanji: string; label: string; span?: string }[] = [
-  { tone: "salmon", kanji: "鮭", label: "Torched belly", span: "row-span-2" },
-  { tone: "wood", kanji: "席", label: "The counter" },
-  { tone: "matcha", kanji: "茶", label: "Matcha service" },
-  { tone: "night", kanji: "夜", label: "Evening room", span: "row-span-2" },
-  { tone: "roe", kanji: "雲丹", label: "Uni, Rausu" },
-  { tone: "ceramic", kanji: "器", label: "Ceramics" },
+const tiles: { img: string; alt: string; kanji: string; label: string; span?: string }[] = [
+  { img: "/images/gallery-torched.jpg", alt: "A chef's blowtorch searing a piece of nigiri", kanji: "炭", label: "Torched to order", span: "row-span-2" },
+  { img: "/images/gallery-room.jpg", alt: "The minimalist dining room with paper lanterns", kanji: "席", label: "The room" },
+  { img: "/images/gallery-matcha.jpg", alt: "Ceremonial matcha being whisked in a dark bowl", kanji: "茶", label: "Matcha service" },
+  { img: "/images/gallery-night.jpg", alt: "The dining room at night, lantern-lit", kanji: "夜", label: "After dark", span: "row-span-2" },
+  { img: "/images/dish-uni.jpg", alt: "Hokkaido uni gunkan on nori", kanji: "雲丹", label: "Uni, Rausu" },
+  { img: "/images/ceramics.jpg", alt: "Hand-thrown ceramics", kanji: "器", label: "Ceramics" },
 ];
 
 export function GalleryPreview() {
@@ -34,7 +34,14 @@ export function GalleryPreview() {
       <div className="mt-12 grid auto-rows-[180px] grid-cols-2 gap-4 md:grid-cols-4 md:auto-rows-[200px]">
         {tiles.map((t, i) => (
           <Reveal key={t.label} delay={i % 4} className={t.span ?? ""}>
-            <Plate tone={t.tone} kanji={t.kanji} label={t.label} className="h-full w-full" />
+            <Photo
+              src={t.img}
+              alt={t.alt}
+              kanji={t.kanji}
+              label={t.label}
+              className="h-full w-full"
+              sizes="(max-width: 768px) 50vw, 25vw"
+            />
           </Reveal>
         ))}
       </div>

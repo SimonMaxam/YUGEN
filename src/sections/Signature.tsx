@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
-import { Plate, type PlateTone } from "@/components/ui/Plate";
+import { Photo } from "@/components/ui/Photo";
 import { PopularBadge, ChefBadge, SpiceLevel } from "@/components/ui/Badges";
 import { formatPrice } from "@/lib/utils";
 
@@ -10,7 +10,8 @@ const featured: {
   jp: string;
   desc: string;
   price: number;
-  tone: PlateTone;
+  img: string;
+  alt: string;
   kanji: string;
   popular?: boolean;
   chef?: boolean;
@@ -21,7 +22,8 @@ const featured: {
     jp: "金継ぎ",
     desc: "Bluefin toro, gold leaf, smoked soy pearls and shiso.",
     price: 42,
-    tone: "tuna",
+    img: "/images/dish-kintsugi.jpg",
+    alt: "Bluefin toro nigiri topped with gold leaf and shiso on a black kintsugi plate with golden seams",
     kanji: "金",
     popular: true,
     chef: true,
@@ -31,7 +33,8 @@ const featured: {
     jp: "炭と柚子",
     desc: "Torched salmon belly, yuzu kosho, crisp leek ash, ikura.",
     price: 34,
-    tone: "salmon",
+    img: "/images/dish-ember-yuzu.jpg",
+    alt: "Torched salmon belly nigiri with char marks, yuzu kosho and ikura roe",
     kanji: "炭",
     popular: true,
     spice: 2,
@@ -41,7 +44,8 @@ const featured: {
     jp: "雲丹",
     desc: "Sea urchin from Rausu, cold-brined nori, a whisper of wasabi.",
     price: 16,
-    tone: "roe",
+    img: "/images/dish-uni.jpg",
+    alt: "A gunkan of vivid orange Hokkaido sea urchin wrapped in dark nori on slate",
     kanji: "雲丹",
     popular: true,
   },
@@ -77,11 +81,13 @@ export function Signature() {
               data-cursor="food"
               className="group relative flex flex-col overflow-hidden rounded-3xl border border-line/60 bg-surface/30 transition-all duration-500 hover:-translate-y-1.5 hover:border-accent/40"
             >
-              <Plate
-                tone={dish.tone}
+              <Photo
+                src={dish.img}
+                alt={dish.alt}
                 kanji={dish.kanji}
                 className="aspect-[4/3]"
                 rounded="rounded-none"
+                sizes="(max-width: 768px) 100vw, 33vw"
               />
               <div className="flex flex-1 flex-col p-6">
                 <div className="mb-3 flex flex-wrap gap-2">

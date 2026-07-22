@@ -1,6 +1,6 @@
 import { Reveal } from "@/components/ui/Reveal";
 import { AnimatedHeading } from "@/components/ui/AnimatedHeading";
-import { Plate } from "@/components/ui/Plate";
+import { Photo } from "@/components/ui/Photo";
 
 export function Chef() {
   return (
@@ -12,7 +12,12 @@ export function Chef() {
       <div className="mx-auto grid max-w-[1400px] items-center gap-14 px-5 md:grid-cols-[0.9fr_1.1fr] md:gap-20 md:px-10">
         <Reveal>
           <div className="relative">
-            <Plate tone="night" kanji="板前" label="Chef Arata Mizuno" className="aspect-[3/4]" />
+            <Photo
+              src="/images/chef-portrait.jpg"
+              alt="Chef Arata Mizuno, executive itamae, standing behind the hinoki counter in an indigo chef's jacket"
+              kanji="板前"
+              className="aspect-[3/4]"
+            />
             <div className="glass absolute -bottom-5 -right-4 rounded-2xl px-5 py-4 md:-right-8">
               <p className="font-serif text-2xl text-ink">Arata Mizuno</p>
               <p className="mt-1 text-[0.62rem] uppercase tracking-wider2 text-muted">

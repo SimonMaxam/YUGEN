@@ -1,6 +1,6 @@
 import { Reveal } from "@/components/ui/Reveal";
 import { AnimatedHeading } from "@/components/ui/AnimatedHeading";
-import { Plate } from "@/components/ui/Plate";
+import { Photo } from "@/components/ui/Photo";
 import { site } from "@/lib/site";
 
 export function Story() {
@@ -62,13 +62,31 @@ export function Story() {
 
         <div className="order-1 grid grid-cols-2 gap-4 md:order-2">
           <Reveal className="col-span-2">
-            <Plate tone="wood" kanji="旬" label="The counter, at dusk" className="aspect-[16/10]" />
+            <Photo
+              src="/images/counter-dusk.jpg"
+              alt="The empty hinoki sushi counter at dusk, lit by warm paper lanterns with a seasonal branch in a ceramic vase"
+              kanji="旬"
+              label="The counter, at dusk"
+              className="aspect-[16/10]"
+            />
           </Reveal>
           <Reveal delay={1}>
-            <Plate tone="salmon" kanji="鮭" label="Aged salmon belly" className="aspect-square" />
+            <Photo
+              src="/images/salmon-belly.jpg"
+              alt="Macro of a marbled slice of aged salmon belly on dark slate"
+              kanji="鮭"
+              label="Aged salmon belly"
+              className="aspect-square"
+            />
           </Reveal>
           <Reveal delay={2}>
-            <Plate tone="ceramic" kanji="器" label="Hand-thrown ceramics" className="aspect-square" />
+            <Photo
+              src="/images/ceramics.jpg"
+              alt="Hand-thrown matte ceramic cups and plates stacked on a concrete surface"
+              kanji="器"
+              label="Hand-thrown ceramics"
+              className="aspect-square"
+            />
           </Reveal>
         </div>
       </div>
