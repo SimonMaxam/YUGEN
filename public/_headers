@@ -8,6 +8,7 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   X-DNS-Prefetch-Control: on
+  X-Robots-Tag: index, follow
 
 # Long-cache immutable, fingerprinted build assets
 /_next/static/*

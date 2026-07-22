@@ -2,7 +2,6 @@
 
 import {
   createContext,
-  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -21,11 +20,15 @@ interface ThemeContextValue {
   auto: boolean;
   /** Manually pick a theme (disables auto). */
   setTheme: (t: TimeOfDay) => void;
-  /** Cycle morning → evening → night → auto. */
+  /** Cycle night → morning → evening → auto. */
   cycle: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
+
+const STORAGE_KEY = "yugen-theme";
+/** Dark is the default so the site opens in its most cinematic state. */
+const DEFAULT_THEME: TimeOfDay = "night";
 
 function applyTheme(theme: TimeOfDay) {
   if (typeof document === "undefined") return;
@@ -33,11 +36,33 @@ function applyTheme(theme: TimeOfDay) {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<TimeOfDay>("evening");
-  const [auto, setAuto] = useState(true);
+  const [theme, setThemeState] = useState<TimeOfDay>(DEFAULT_THEME);
+  const [auto, setAuto] = useState(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Sync with the local clock on mount and re-check at each phase boundary.
+  // Hydrate from the saved preference (matches the pre-paint script in layout).
+  useEffect(() => {
+    let pref: string | null = null;
+    try {
+      pref = localStorage.getItem(STORAGE_KEY);
+    } catch {
+      pref = null;
+    }
+    if (pref === "auto") {
+      setAuto(true);
+    } else if (pref === "morning" || pref === "evening" || pref === "night") {
+      setAuto(false);
+      setThemeState(pref);
+      applyTheme(pref);
+    } else {
+      // No stored choice → dark default.
+      setAuto(false);
+      setThemeState(DEFAULT_THEME);
+      applyTheme(DEFAULT_THEME);
+    }
+  }, []);
+
+  // When in auto mode, follow the local clock and re-check at each phase edge.
   useEffect(() => {
     if (!auto) return;
 
@@ -54,19 +79,29 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     };
   }, [auto]);
 
+  const persist = (value: string) => {
+    try {
+      localStorage.setItem(STORAGE_KEY, value);
+    } catch {
+      /* storage unavailable — ignore */
+    }
+  };
+
   const setTheme = (t: TimeOfDay) => {
     setAuto(false);
     setThemeState(t);
     applyTheme(t);
+    persist(t);
   };
 
   const cycle = () => {
-    const order: (TimeOfDay | "auto")[] = ["morning", "evening", "night", "auto"];
+    const order: (TimeOfDay | "auto")[] = ["night", "morning", "evening", "auto"];
     const current = auto ? "auto" : theme;
     const idx = order.indexOf(current);
     const next = order[(idx + 1) % order.length];
     if (next === "auto") {
       setAuto(true);
+      persist("auto");
     } else {
       setTheme(next);
     }

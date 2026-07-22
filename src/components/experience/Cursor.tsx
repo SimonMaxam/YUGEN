@@ -112,7 +112,7 @@ export function Cursor() {
     <div
       ref={wrapRef}
       aria-hidden
-      className="pointer-events-none fixed left-0 top-0 z-[9999] hidden [--press:1] mix-blend-difference md:block"
+      className="pointer-events-none fixed left-0 top-0 z-[10002] hidden [--press:1] mix-blend-difference md:block"
       style={{
         opacity: visible ? 1 : 0,
         transition: "opacity 0.4s ease",

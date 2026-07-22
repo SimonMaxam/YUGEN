@@ -74,8 +74,9 @@ export const viewport: Viewport = {
   colorScheme: "light dark",
 };
 
-// Sets the correct time-of-day theme before paint to avoid a flash.
-const themeInit = `(function(){try{var h=new Date().getHours();var t=(h>=5&&h<17)?"morning":(h>=17&&h<21)?"evening":"night";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","evening");}})();`;
+// Applies the saved theme (or the dark default) before paint to avoid a flash.
+// Default is night/dark; visitors can switch and their choice is remembered.
+const themeInit = `(function(){try{var p=localStorage.getItem("yugen-theme");var t;if(p&&p!=="auto"){t=p;}else if(p==="auto"){var h=new Date().getHours();t=(h>=5&&h<17)?"morning":(h>=17&&h<21)?"evening":"night";}else{t="night";}document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","night");}})();`;
 
 export default function RootLayout({
   children,
@@ -85,7 +86,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-theme="evening"
+      data-theme="night"
       suppressHydrationWarning
       className={`${serif.variable} ${sans.variable} ${jp.variable}`}
     >

@@ -12,8 +12,8 @@ export const site = {
     "Yūgen (幽玄) — the profound, mysterious grace of the universe, felt but never fully seen.",
   description:
     "YŪGEN is an intimate Tokyo-inspired omakase counter where seasonal fish, quiet architecture and cinematic light become a single, unhurried ritual.",
-  // Use your real production domain here before deploying.
-  url: "https://yugen.pages.dev",
+  // Live production domain. Update this if you attach a custom domain later.
+  url: "https://yugen-6b9.pages.dev",
   locale: "en_US",
   email: "reservations@yugen.dining",
   phoneDisplay: "+1 (415) 555-0192",

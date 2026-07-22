@@ -47,6 +47,17 @@ export function Hero() {
         style={{ y, opacity }}
         className="relative z-10 mx-auto flex max-w-5xl flex-col items-center px-6 text-center"
       >
+        {/* Legibility scrim — a soft, theme-coloured halo so the headline and
+            copy stay readable over the busy 3D sushi in every time-of-day. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[135%] w-[125%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] blur-2xl"
+          style={{
+            background:
+              "radial-gradient(closest-side, rgb(var(--c-bg)/0.78), rgb(var(--c-bg)/0.42) 55%, transparent 80%)",
+          }}
+        />
+
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -60,13 +71,17 @@ export function Hero() {
 
         <h1 className="font-serif text-fluid-hero font-light leading-[0.86] text-ink">
           <OverflowLine delay={0.35}>{site.name}</OverflowLine>
+          <span className="sr-only">
+            {" "}
+            — Omakase Sushi &amp; Cinematic Fine Dining in San Francisco
+          </span>
         </h1>
 
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.9 }}
-          className="mt-7 max-w-md text-balance text-base leading-relaxed text-muted md:text-lg"
+          className="mt-7 max-w-md text-balance text-base font-medium leading-relaxed text-ink/85 md:text-lg"
         >
           {site.tagline}. An intimate omakase counter where the season,
           the light and the hand of the chef become one quiet ritual.
@@ -81,7 +96,7 @@ export function Hero() {
           <Magnetic strength={0.35}>
             <Link
               href="/reservations"
-              className="rounded-full bg-accent px-9 py-4 text-[0.72rem] uppercase tracking-wider2 text-bg transition-all duration-500 hover:brightness-110"
+              className="rounded-full bg-accent px-9 py-4 text-[0.72rem] uppercase tracking-wider2 text-bg shadow-lg shadow-accent/20 transition-all duration-500 hover:brightness-110"
             >
               Reserve a seating
             </Link>
@@ -89,7 +104,7 @@ export function Hero() {
           <Magnetic strength={0.35}>
             <Link
               href="/menu"
-              className="rounded-full border border-ink/20 px-9 py-4 text-[0.72rem] uppercase tracking-wider2 text-ink transition-all duration-500 hover:border-accent hover:text-accent"
+              className="rounded-full border border-ink/40 bg-elevated/40 px-9 py-4 text-[0.72rem] uppercase tracking-wider2 text-ink backdrop-blur-sm transition-all duration-500 hover:border-accent hover:bg-elevated/60 hover:text-accent"
             >
               View the menu
             </Link>

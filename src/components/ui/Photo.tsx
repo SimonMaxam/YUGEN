@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, useScroll, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -31,7 +31,15 @@ export function Photo({
   sizes?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const imgRef = useRef<HTMLImageElement>(null);
   const [loaded, setLoaded] = useState(false);
+
+  // Images that are already cached finish loading before hydration attaches the
+  // onLoad handler — without this check they'd stay stuck at opacity-0 forever.
+  useEffect(() => {
+    if (imgRef.current?.complete) setLoaded(true);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
@@ -45,12 +53,14 @@ export function Photo({
       className={cn("group relative overflow-hidden bg-surface/50", rounded, className)}
     >
       <motion.img
+        ref={imgRef}
         src={src}
         alt={alt}
         loading={priority ? "eager" : "lazy"}
         decoding="async"
         sizes={sizes}
         onLoad={() => setLoaded(true)}
+        onError={() => setLoaded(true)}
         style={{ y, scale }}
         className={cn(
           "absolute inset-0 h-full w-full object-cover transition-opacity duration-[1200ms] ease-silk",

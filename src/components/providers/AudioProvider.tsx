@@ -21,22 +21,17 @@ const AudioCtx = createContext<AudioContextValue | null>(null);
 const TRACK = "/audio/ambient.mp3";
 const TARGET_VOLUME = 0.32;
 const FADE_MS = 1600;
+const STORAGE_KEY = "yugen-sound";
 
 export function AudioProvider({ children }: { children: React.ReactNode }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const fadeRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const enabledRef = useRef(false);
   const [enabled, setEnabled] = useState(false);
 
-  useEffect(() => {
-    const el = new Audio(TRACK);
-    el.loop = true;
-    el.preload = "none";
-    el.volume = 0;
-    audioRef.current = el;
-    return () => {
-      el.pause();
-      audioRef.current = null;
-    };
+  const setEnabledBoth = useCallback((v: boolean) => {
+    enabledRef.current = v;
+    setEnabled(v);
   }, []);
 
   const fadeTo = useCallback((target: number, onDone?: () => void) => {
@@ -55,47 +50,105 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     }, 40);
   }, []);
 
+  const persist = (value: "on" | "off") => {
+    try {
+      localStorage.setItem(STORAGE_KEY, value);
+    } catch {
+      /* storage unavailable — ignore */
+    }
+  };
+
   const enable = useCallback(() => {
     const el = audioRef.current;
-    if (!el || enabled) return;
+    if (!el || enabledRef.current) return;
     el.play()
       .then(() => {
-        setEnabled(true);
+        setEnabledBoth(true);
+        persist("on");
         fadeTo(TARGET_VOLUME);
       })
       .catch(() => {
-        // Autoplay blocked — will succeed on the next user gesture.
-        setEnabled(false);
+        // Autoplay still blocked — a later gesture will retry.
+        setEnabledBoth(false);
       });
-  }, [enabled, fadeTo]);
+  }, [fadeTo, setEnabledBoth]);
 
   const toggle = useCallback(() => {
     const el = audioRef.current;
     if (!el) return;
-    if (enabled) {
+    if (enabledRef.current) {
       fadeTo(0, () => el.pause());
-      setEnabled(false);
+      setEnabledBoth(false);
+      persist("off");
     } else {
       el.play()
         .then(() => {
-          setEnabled(true);
+          setEnabledBoth(true);
+          persist("on");
           fadeTo(TARGET_VOLUME);
         })
-        .catch(() => setEnabled(false));
+        .catch(() => setEnabledBoth(false));
     }
-  }, [enabled, fadeTo]);
+  }, [fadeTo, setEnabledBoth]);
+
+  // Create the element and, unless the visitor previously muted, arm the
+  // soundtrack to begin on the very first interaction (autoplay-policy safe).
+  useEffect(() => {
+    const el = new Audio(TRACK);
+    el.loop = true;
+    el.preload = "auto";
+    el.volume = 0;
+    audioRef.current = el;
+
+    let pref: string | null = null;
+    try {
+      pref = localStorage.getItem(STORAGE_KEY);
+    } catch {
+      pref = null;
+    }
+
+    let cleanupGesture: (() => void) | undefined;
+    if (pref !== "off") {
+      // Try immediately (works if the tab already has engagement), otherwise
+      // wait for the first gesture anywhere on the page.
+      el.play()
+        .then(() => {
+          setEnabledBoth(true);
+          fadeTo(TARGET_VOLUME);
+        })
+        .catch(() => {
+          const start = () => {
+            enable();
+            cleanupGesture?.();
+          };
+          const events = ["pointerdown", "keydown", "wheel", "touchstart"] as const;
+          events.forEach((e) =>
+            window.addEventListener(e, start, { once: true, passive: true }),
+          );
+          cleanupGesture = () =>
+            events.forEach((e) => window.removeEventListener(e, start));
+        });
+    }
+
+    return () => {
+      cleanupGesture?.();
+      el.pause();
+      audioRef.current = null;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Gently duck the audio when the tab is hidden.
   useEffect(() => {
     function onVisibility() {
       const el = audioRef.current;
-      if (!el || !enabled) return;
+      if (!el || !enabledRef.current) return;
       if (document.hidden) fadeTo(0.08);
       else fadeTo(TARGET_VOLUME);
     }
     document.addEventListener("visibilitychange", onVisibility);
     return () => document.removeEventListener("visibilitychange", onVisibility);
-  }, [enabled, fadeTo]);
+  }, [fadeTo]);
 
   const value = useMemo(
     () => ({ enabled, toggle, enable }),

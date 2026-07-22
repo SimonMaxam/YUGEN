@@ -28,7 +28,7 @@ export function ControlDock() {
         aria-label={audio.enabled ? "Mute ambient sound" : "Play ambient sound"}
         className="glass flex h-11 w-11 items-center justify-center rounded-full text-ink transition-all duration-500 hover:text-accent"
       >
-        <SoundBars active={audio.enabled} />
+        <MusicNote active={audio.enabled} />
       </button>
     </div>
   );
@@ -69,29 +69,58 @@ function ThemeGlyph({ theme }: { theme: string }) {
   );
 }
 
-function SoundBars({ active }: { active: boolean }) {
+/** A musical note — gently bobs when the ambient track is playing, and shows a
+ *  slash when muted, so the on/off state reads at a glance. */
+function MusicNote({ active }: { active: boolean }) {
   return (
-    <div className="flex h-4 items-end gap-[3px]">
-      {[0, 1, 2, 3].map((i) => (
-        <span
-          key={i}
-          className="w-[2px] rounded-full bg-current transition-all duration-300"
-          style={{
-            height: active ? undefined : "3px",
-            animation: active
-              ? `soundbar 900ms ease-in-out ${i * 120}ms infinite`
-              : "none",
-          }}
+    <div className="relative flex items-center justify-center">
+      <svg
+        width="17"
+        height="17"
+        viewBox="0 0 24 24"
+        fill="none"
+        aria-hidden
+        style={{
+          animation: active ? "note-bob 1.6s ease-in-out infinite" : "none",
+        }}
+      >
+        <path
+          d="M9 17V5.2l10-2.2v11"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
-      ))}
+        <ellipse
+          cx="6.4"
+          cy="17.2"
+          rx="2.6"
+          ry="2.2"
+          fill={active ? "currentColor" : "none"}
+          stroke="currentColor"
+          strokeWidth="1.5"
+        />
+        <ellipse
+          cx="16.4"
+          cy="14"
+          rx="2.6"
+          ry="2.2"
+          fill={active ? "currentColor" : "none"}
+          stroke="currentColor"
+          strokeWidth="1.5"
+        />
+      </svg>
+      {!active && (
+        <span className="absolute h-[1.5px] w-[22px] rotate-45 rounded-full bg-current" />
+      )}
       <style jsx>{`
-        @keyframes soundbar {
+        @keyframes note-bob {
           0%,
           100% {
-            height: 4px;
+            transform: translateY(0);
           }
           50% {
-            height: 15px;
+            transform: translateY(-2px);
           }
         }
       `}</style>
