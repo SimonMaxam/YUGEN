@@ -1,0 +1,234 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   YŪGEN — Design tokens
+   All palettes are expressed as space-separated RGB channels so Tailwind can
+   apply <alpha-value>. Switching the [data-theme] attribute on <html> re-skins
+   the entire site; the 1.2s transitions make the time-of-day shift cinematic.
+   ============================================================================ */
+
+:root,
+[data-theme="morning"] {
+  --c-bg: 245 242 236;
+  --c-surface: 236 231 222;
+  --c-elevated: 252 250 246;
+  --c-ink: 26 24 22;
+  --c-muted: 92 86 79;
+  --c-faint: 150 143 134;
+  --c-line: 214 208 198;
+  --c-accent: 176 58 46;
+  --c-accent-soft: 201 112 92;
+  --c-gold: 158 130 74;
+
+  --grain-opacity: 0.045;
+  --glow: 255 244 224;
+  --shadow-color: 26 24 22;
+}
+
+[data-theme="evening"] {
+  --c-bg: 240 229 214;
+  --c-surface: 232 217 198;
+  --c-elevated: 249 238 223;
+  --c-ink: 40 29 22;
+  --c-muted: 108 86 68;
+  --c-faint: 160 134 110;
+  --c-line: 216 196 170;
+  --c-accent: 190 68 40;
+  --c-accent-soft: 216 130 84;
+  --c-gold: 178 138 78;
+
+  --grain-opacity: 0.05;
+  --glow: 255 214 160;
+  --shadow-color: 60 34 18;
+}
+
+[data-theme="night"] {
+  --c-bg: 13 12 14;
+  --c-surface: 22 20 23;
+  --c-elevated: 31 28 32;
+  --c-ink: 240 236 229;
+  --c-muted: 176 170 161;
+  --c-faint: 118 112 106;
+  --c-line: 52 48 53;
+  --c-accent: 216 94 66;
+  --c-accent-soft: 226 142 98;
+  --c-gold: 214 176 110;
+
+  --grain-opacity: 0.07;
+  --glow: 74 44 22;
+  --shadow-color: 0 0 0;
+}
+
+* {
+  border-color: rgb(var(--c-line));
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: auto; /* Lenis handles smoothing */
+}
+
+body {
+  background-color: rgb(var(--c-bg));
+  color: rgb(var(--c-ink));
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  transition:
+    background-color 1200ms cubic-bezier(0.22, 1, 0.36, 1),
+    color 1200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Colour + background transitions for the theme shift on common elements */
+body * {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 900ms;
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+::selection {
+  background: rgb(var(--c-accent) / 0.9);
+  color: rgb(var(--c-bg));
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif), Georgia, serif;
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+}
+
+/* ------------------------------ Scrollbar ------------------------------ */
+::-webkit-scrollbar {
+  width: 9px;
+}
+::-webkit-scrollbar-track {
+  background: rgb(var(--c-bg));
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--c-line));
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--c-faint));
+}
+
+/* --------------------------- Utility layer ----------------------------- */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .kicker {
+    font-family: var(--font-sans);
+    text-transform: uppercase;
+    letter-spacing: 0.42em;
+    font-size: 0.68rem;
+    color: rgb(var(--c-accent));
+    font-weight: 500;
+  }
+  .hairline {
+    height: 1px;
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgb(var(--c-line)),
+      transparent
+    );
+  }
+  .glass {
+    background: rgb(var(--c-elevated) / 0.55);
+    -webkit-backdrop-filter: blur(20px) saturate(1.2);
+    backdrop-filter: blur(20px) saturate(1.2);
+    border: 1px solid rgb(var(--c-ink) / 0.06);
+  }
+  .ink-underline {
+    background-image: linear-gradient(rgb(var(--c-accent)), rgb(var(--c-accent)));
+    background-size: 0% 1px;
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    transition: background-size 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .ink-underline:hover {
+    background-size: 100% 1px;
+  }
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .mask-fade-y {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      #000 12%,
+      #000 88%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      #000 12%,
+      #000 88%,
+      transparent
+    );
+  }
+}
+
+/* ------------------------- Cinematic film grain ------------------------ */
+.grain::after {
+  content: "";
+  position: fixed;
+  inset: -50%;
+  z-index: 9998;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: grain-shift 0.6s steps(2) infinite;
+}
+@keyframes grain-shift {
+  0% { transform: translate(0, 0); }
+  50% { transform: translate(-2%, 1%); }
+  100% { transform: translate(1%, -1%); }
+}
+
+/* ------------------------------ Cursor --------------------------------- */
+/* Hide the native cursor only on precise pointers where we render our own. */
+@media (pointer: fine) {
+  .custom-cursor-active,
+  .custom-cursor-active * {
+    cursor: none !important;
+  }
+}
+
+/* Respect reduced motion: disable non-essential animation everywhere. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .grain::after {
+    display: none;
+  }
+}
+
+/* Accessible focus ring */
+:focus-visible {
+  outline: 2px solid rgb(var(--c-accent));
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Vertical writing mode for tategaki Japanese accents */
+.tategaki {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  letter-spacing: 0.25em;
+}
