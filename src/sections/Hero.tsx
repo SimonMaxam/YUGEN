@@ -16,24 +16,25 @@ export function Hero() {
   const ref = useRef<HTMLDivElement>(null);
   // Lock height once so mobile browser chrome show/hide doesn't resize the hero.
   const [lockedH, setLockedH] = useState<number | null>(null);
-  const [mountScene, setMountScene] = useState(false);
+  const [mountScene, setMountScene] = useState(true);
   const [isTouch, setIsTouch] = useState(false);
 
   useEffect(() => {
     setLockedH(window.innerHeight);
     const touch =
-      window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window;
+      window.matchMedia("(pointer: coarse)").matches ||
+      (navigator.maxTouchPoints > 0 && window.innerWidth < 900);
     setIsTouch(touch);
 
-    // Defer WebGL until after first paint so text + CTAs appear instantly.
-    let cancelled = false;
-    const t = window.setTimeout(() => {
-      if (!cancelled) setMountScene(true);
-    }, touch ? 500 : 280);
-    return () => {
-      cancelled = true;
-      window.clearTimeout(t);
-    };
+    // On phones only, briefly defer WebGL so text/CTAs paint first.
+    // Desktop mounts immediately — the hero 3D is the main impression.
+    if (!touch) {
+      setMountScene(true);
+      return;
+    }
+    setMountScene(false);
+    const t = window.setTimeout(() => setMountScene(true), 400);
+    return () => window.clearTimeout(t);
   }, []);
 
   // iOS needs a user gesture to unlock DeviceOrientation for the gyro parallax.
@@ -89,10 +90,10 @@ export function Hero() {
       >
         <div
           aria-hidden
-          className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[135%] w-[125%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] blur-2xl"
+          className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[110%] w-[95%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] blur-2xl"
           style={{
             background:
-              "radial-gradient(closest-side, rgb(var(--c-bg)/0.78), rgb(var(--c-bg)/0.42) 55%, transparent 80%)",
+              "radial-gradient(closest-side, rgb(var(--c-bg)/0.62), rgb(var(--c-bg)/0.28) 50%, transparent 72%)",
           }}
         />
 

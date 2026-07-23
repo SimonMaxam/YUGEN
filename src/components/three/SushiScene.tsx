@@ -1,14 +1,13 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
 import {
   Environment,
   Float,
   Lightformer,
   ContactShadows,
 } from "@react-three/drei";
-import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
 import * as THREE from "three";
 import {
   Nigiri,
@@ -82,31 +81,32 @@ function Scene({ lite }: { lite: boolean }) {
   const tilt = useRef<Tilt>({ x: 0, y: 0 });
 
   useEffect(() => {
+    if (!lite) return;
     let baseBeta: number | null = null;
     let baseGamma: number | null = null;
 
     function onOrient(e: DeviceOrientationEvent) {
-      const beta = e.beta ?? 0; // front-back tilt
-      const gamma = e.gamma ?? 0; // left-right tilt
+      const beta = e.beta ?? 0;
+      const gamma = e.gamma ?? 0;
       if (baseBeta === null) {
         baseBeta = beta;
         baseGamma = gamma;
       }
-      // Relative to the pose when the page opened — feels natural.
       tilt.current.x = THREE.MathUtils.clamp((beta - (baseBeta ?? 0)) / 28, -1, 1);
       tilt.current.y = THREE.MathUtils.clamp((gamma - (baseGamma ?? 0)) / 28, -1, 1);
     }
 
     window.addEventListener("deviceorientation", onOrient, { passive: true });
     return () => window.removeEventListener("deviceorientation", onOrient);
-  }, []);
+  }, [lite]);
 
   return (
     <>
-      <ambientLight intensity={lite ? 0.7 : 0.45} />
+      <ambientLight intensity={lite ? 0.75 : 0.5} />
+      <hemisphereLight args={["#fff4e2", "#c9a07a", lite ? 0.55 : 0.35]} />
       <directionalLight
         position={[4, 8, 5]}
-        intensity={lite ? 1.6 : 2.2}
+        intensity={lite ? 1.7 : 2.3}
         castShadow={!lite}
         shadow-mapSize={lite ? [512, 512] : [1024, 1024]}
         color="#fff4e2"
@@ -118,7 +118,7 @@ function Scene({ lite }: { lite: boolean }) {
             position={[0, 6, 2]}
             angle={0.55}
             penumbra={0.7}
-            intensity={1.4}
+            intensity={1.3}
             color="#ffe8c4"
           />
         </>
@@ -166,24 +166,28 @@ function Scene({ lite }: { lite: boolean }) {
           <MakiRoll fill="#d8593a" sesame={!lite} />
         </Piece>
 
+        <Piece
+          position={[1.55, 1.45, -0.9]}
+          rotation={[0.35, -0.2, 0.15]}
+          speed={1.15}
+          scale={0.85}
+          float={!lite}
+        >
+          <MakiRoll fill="#e8845a" sesame={!lite} />
+        </Piece>
+
+        <Piece
+          position={[1.9, -1.1, 0.35]}
+          rotation={[0.2, -0.3, 0.1]}
+          speed={1.05}
+          scale={0.9}
+          float={!lite}
+        >
+          <Gunkan roe="#c9455c" lite={lite} />
+        </Piece>
+
         {!lite && (
           <>
-            <Piece
-              position={[1.55, 1.45, -0.9]}
-              rotation={[0.35, -0.2, 0.15]}
-              speed={1.15}
-              scale={0.85}
-            >
-              <MakiRoll fill="#e8845a" />
-            </Piece>
-            <Piece
-              position={[1.9, -1.1, 0.35]}
-              rotation={[0.2, -0.3, 0.1]}
-              speed={1.05}
-              scale={0.9}
-            >
-              <Gunkan roe="#c9455c" />
-            </Piece>
             <Piece
               position={[-2.0, 1.55, -0.7]}
               rotation={[0.25, 0.5, -0.1]}
@@ -210,17 +214,6 @@ function Scene({ lite }: { lite: boolean }) {
             </Piece>
           </>
         )}
-
-        {lite && (
-          <Piece
-            position={[1.7, -1.15, 0.2]}
-            rotation={[0.2, -0.25, 0.1]}
-            scale={0.85}
-            float={false}
-          >
-            <Gunkan roe="#c9455c" lite />
-          </Piece>
-        )}
       </ParallaxRig>
 
       {!lite && (
@@ -239,56 +232,50 @@ function Scene({ lite }: { lite: boolean }) {
             <Lightformer intensity={1.2} position={[-4, 1, 2]} scale={[3, 5, 1]} color="#ffd9a8" />
             <Lightformer intensity={1} position={[4, -1, 3]} scale={[4, 4, 1]} color="#ffe9cc" />
           </Environment>
-          <EffectComposer enableNormalPass={false}>
-            <Bloom mipmapBlur intensity={0.3} luminanceThreshold={0.88} radius={0.55} />
-            <Vignette eskil={false} offset={0.28} darkness={0.5} />
-          </EffectComposer>
         </>
       )}
     </>
   );
 }
 
-function PauseWhenOffscreen() {
-  const { invalidate, set, gl } = useThree();
+function useIsLiteDevice() {
+  const [lite, setLite] = useState(false);
   useEffect(() => {
-    const el = gl.domElement.parentElement ?? gl.domElement;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        set({ frameloop: entry.isIntersecting ? "always" : "never" });
-        if (entry.isIntersecting) invalidate();
-      },
-      { threshold: 0.05 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [gl, invalidate, set]);
-  return null;
+    const touch =
+      window.matchMedia("(pointer: coarse)").matches ||
+      (navigator.maxTouchPoints > 0 && window.innerWidth < 900);
+    const cores = navigator.hardwareConcurrency ?? 8;
+    setLite(touch || cores <= 2);
+  }, []);
+  return lite;
 }
 
 export default function SushiScene() {
-  const lite = useMemo(() => {
-    if (typeof window === "undefined") return true;
-    const touch =
-      window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window;
-    const cores = navigator.hardwareConcurrency ?? 8;
-    return touch || cores <= 4 || window.innerWidth < 900;
-  }, []);
+  const lite = useIsLiteDevice();
 
   return (
     <Canvas
       shadows={!lite}
-      dpr={lite ? [1, 1.25] : [1, 1.6]}
+      dpr={lite ? [1, 1.25] : [1, 1.75]}
       gl={{
         antialias: !lite,
         alpha: true,
         powerPreference: lite ? "low-power" : "high-performance",
         stencil: false,
+        // Needed so the transparent hero canvas actually composites the sushi.
+        premultipliedAlpha: true,
       }}
       camera={{ position: [0, 0.2, 8.2], fov: 36 }}
-      className="!absolute inset-0 !pointer-events-none"
+      style={{
+        position: "absolute",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        pointerEvents: "none",
+      }}
       frameloop="always"
       onCreated={({ gl }) => {
+        gl.setClearColor(0x000000, 0);
         gl.domElement.style.pointerEvents = "none";
         gl.domElement.addEventListener(
           "webglcontextlost",
@@ -298,7 +285,6 @@ export default function SushiScene() {
       }}
     >
       <Suspense fallback={null}>
-        <PauseWhenOffscreen />
         <Scene lite={lite} />
       </Suspense>
     </Canvas>
