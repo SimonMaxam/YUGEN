@@ -57,12 +57,12 @@ function Nigiri({
   return (
     <group position={position}>
       <mesh castShadow>
-        <capsuleGeometry args={[0.05, 0.14, 4, 10]} />
-        <meshStandardMaterial color="#f6efe0" roughness={0.7} />
+        <capsuleGeometry args={[0.045, 0.12, 3, 8]} />
+        <meshStandardMaterial color="#f6efe0" roughness={0.75} />
       </mesh>
-      <mesh position={[0, 0.055, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
-        <capsuleGeometry args={[0.055, 0.16, 4, 10]} />
-        <meshStandardMaterial color={color} roughness={0.35} />
+      <mesh position={[0, 0.05, 0]} rotation={[0, 0, Math.PI / 2]} castShadow>
+        <capsuleGeometry args={[0.05, 0.14, 3, 8]} />
+        <meshStandardMaterial color={color} roughness={0.3} metalness={0.05} />
       </mesh>
     </group>
   );
@@ -78,8 +78,13 @@ function Plate({
   return (
     <group position={position}>
       <mesh receiveShadow castShadow>
-        <cylinderGeometry args={[0.24, 0.22, 0.03, 32]} />
-        <meshStandardMaterial color="#171512" roughness={0.3} metalness={0.1} />
+        <cylinderGeometry args={[0.24, 0.22, 0.03, 28]} />
+        <meshStandardMaterial color="#171512" roughness={0.3} metalness={0.12} />
+      </mesh>
+      {/* rim highlight */}
+      <mesh position={[0, 0.018, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <ringGeometry args={[0.2, 0.235, 28]} />
+        <meshBasicMaterial color="#3a342e" transparent opacity={0.5} />
       </mesh>
       <Nigiri position={[-0.08, 0.03, 0]} color={netaColor} />
       <Nigiri position={[0.08, 0.03, 0.02]} color={netaColor} />
@@ -97,12 +102,22 @@ function Stool({
   return (
     <group position={position}>
       <mesh position={[0, 0.52, 0]} castShadow>
-        <cylinderGeometry args={[0.22, 0.2, 0.08, 24]} />
+        <cylinderGeometry args={[0.22, 0.2, 0.08, 20]} />
         <meshStandardMaterial color={wood} roughness={0.5} />
       </mesh>
+      {/* leather cushion */}
+      <mesh position={[0, 0.58, 0]} castShadow>
+        <cylinderGeometry args={[0.2, 0.2, 0.05, 20]} />
+        <meshStandardMaterial color="#3a2a20" roughness={0.7} />
+      </mesh>
       <mesh position={[0, 0.26, 0]} castShadow>
-        <cylinderGeometry args={[0.05, 0.06, 0.52, 12]} />
+        <cylinderGeometry args={[0.05, 0.06, 0.52, 10]} />
         <meshStandardMaterial color="#201c18" roughness={0.6} metalness={0.3} />
+      </mesh>
+      {/* foot ring */}
+      <mesh position={[0, 0.12, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.14, 0.012, 6, 20]} />
+        <meshStandardMaterial color="#201c18" roughness={0.5} metalness={0.4} />
       </mesh>
     </group>
   );
@@ -182,6 +197,9 @@ function DiningTable({
           <meshStandardMaterial color="#efe7d6" roughness={0.8} />
         </mesh>
       ))}
+      <CeramicCup position={[-0.55, 0.82, 0.28]} />
+      <CeramicCup position={[0.55, 0.82, -0.28]} color="#e8dcc8" />
+      <ChopsticksOnTable position={[0, 0.8, 0.32]} />
       {mode === "orbit" && (
         <Float speed={2} floatIntensity={0.4} rotationIntensity={0}>
           <mesh ref={ring} position={[0, 1.55, 0]} rotation={[Math.PI / 2, 0, 0]}>
@@ -228,26 +246,115 @@ function Bottle({
 
 function Plant({ position }: { position: [number, number, number] }) {
   const blades = useMemo(
-    () => Array.from({ length: 7 }).map((_, j) => ({ a: (j / 7) * Math.PI * 2, t: 0.2 + (j % 3) * 0.08 })),
+    () =>
+      Array.from({ length: 9 }).map((_, j) => ({
+        a: (j / 9) * Math.PI * 2,
+        t: 0.15 + (j % 3) * 0.1,
+        h: 1.4 + (j % 4) * 0.15,
+      })),
     [],
   );
   return (
     <group position={position}>
       <mesh position={[0, 0.35, 0]} castShadow>
-        <cylinderGeometry args={[0.34, 0.42, 0.7, 18]} />
+        <cylinderGeometry args={[0.34, 0.42, 0.7, 16]} />
         <meshStandardMaterial color="#2f2a24" roughness={0.85} />
+      </mesh>
+      {/* soil */}
+      <mesh position={[0, 0.72, 0]}>
+        <cylinderGeometry args={[0.3, 0.3, 0.08, 14]} />
+        <meshStandardMaterial color="#3a2e22" roughness={1} />
       </mesh>
       {blades.map((b, j) => (
         <mesh
           key={j}
-          position={[Math.cos(b.a) * 0.18, 1.35, Math.sin(b.a) * 0.18]}
-          rotation={[b.t, b.a, b.t]}
+          position={[Math.cos(b.a) * 0.16, 0.9 + b.h / 2, Math.sin(b.a) * 0.16]}
+          rotation={[b.t, b.a, b.t * 0.6]}
           castShadow
         >
-          <coneGeometry args={[0.1, 1.7, 5]} />
-          <meshStandardMaterial color="#48583c" roughness={0.8} />
+          <coneGeometry args={[0.09, b.h, 5]} />
+          <meshStandardMaterial color={j % 2 ? "#4a5c3c" : "#3f5234"} roughness={0.8} />
         </mesh>
       ))}
+    </group>
+  );
+}
+
+function CeramicCup({
+  position,
+  color = "#efe7d6",
+}: {
+  position: [number, number, number];
+  color?: string;
+}) {
+  return (
+    <group position={position}>
+      <mesh castShadow>
+        <cylinderGeometry args={[0.06, 0.05, 0.1, 14]} />
+        <meshStandardMaterial color={color} roughness={0.4} />
+      </mesh>
+      <mesh position={[0, 0.04, 0]}>
+        <cylinderGeometry args={[0.05, 0.05, 0.02, 12]} />
+        <meshStandardMaterial color="#2a1a12" roughness={0.6} />
+      </mesh>
+    </group>
+  );
+}
+
+function ChopsticksOnTable({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position} rotation={[0, 0.4, 0]}>
+      {[0.03, -0.03].map((z, i) => (
+        <mesh key={i} position={[0, 0, z]} rotation={[0, 0, Math.PI / 2]} castShadow>
+          <cylinderGeometry args={[0.008, 0.012, 0.42, 6]} />
+          <meshStandardMaterial color="#2a211b" roughness={0.45} />
+        </mesh>
+      ))}
+    </group>
+  );
+}
+
+function CuttingBoard({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position}>
+      <RoundedBox args={[0.9, 0.04, 0.5]} radius={0.02} castShadow receiveShadow>
+        <meshStandardMaterial color="#8a6340" roughness={0.55} />
+      </RoundedBox>
+      {/* yanagiba knife */}
+      <mesh position={[0.15, 0.04, 0]} rotation={[0, 0.2, 0]} castShadow>
+        <boxGeometry args={[0.55, 0.015, 0.05]} />
+        <meshStandardMaterial color="#c8d0d8" roughness={0.2} metalness={0.85} />
+      </mesh>
+      <mesh position={[-0.2, 0.04, 0]} castShadow>
+        <boxGeometry args={[0.18, 0.025, 0.04]} />
+        <meshStandardMaterial color="#1c1814" roughness={0.6} />
+      </mesh>
+    </group>
+  );
+}
+
+function Ikebana({ position }: { position: [number, number, number] }) {
+  return (
+    <group position={position}>
+      <mesh castShadow>
+        <cylinderGeometry args={[0.18, 0.22, 0.2, 16]} />
+        <meshStandardMaterial color="#2a2622" roughness={0.5} />
+      </mesh>
+      {[0, 1, 2].map((i) => (
+        <mesh
+          key={i}
+          position={[Math.cos(i) * 0.04, 0.55 + i * 0.08, Math.sin(i) * 0.04]}
+          rotation={[0.3 + i * 0.1, i, 0.15]}
+          castShadow
+        >
+          <cylinderGeometry args={[0.01, 0.01, 0.9, 5]} />
+          <meshStandardMaterial color="#3d4a32" roughness={0.8} />
+        </mesh>
+      ))}
+      <mesh position={[0.08, 0.85, 0.02]} castShadow>
+        <sphereGeometry args={[0.07, 8, 8]} />
+        <meshStandardMaterial color="#c94f3a" roughness={0.45} />
+      </mesh>
     </group>
   );
 }
@@ -327,6 +434,13 @@ export function Room({
         <planeGeometry args={[halfW * 2, halfD * 2]} />
         <meshStandardMaterial color={p.wallWarm} roughness={0.95} side={THREE.BackSide} />
       </mesh>
+      {/* timber beams */}
+      {[-3.5, -1.2, 1.2, 3.5].map((z) => (
+        <mesh key={`beam-${z}`} position={[0, height - 0.12, z]} castShadow>
+          <boxGeometry args={[halfW * 1.95, 0.16, 0.22]} />
+          <meshStandardMaterial color={p.woodDark} roughness={0.7} />
+        </mesh>
+      ))}
       {/* recessed ceiling cove */}
       <mesh position={[0, height - 0.05, 0]}>
         <boxGeometry args={[halfW * 1.5, 0.06, 0.3]} />
@@ -342,6 +456,22 @@ export function Room({
       <mesh position={[0, height / 2, -halfD]} receiveShadow>
         <planeGeometry args={[halfW * 2, height]} />
         <meshStandardMaterial color={p.wall} roughness={0.96} />
+      </mesh>
+      {/* vertical wood slats on back wall */}
+      {Array.from({ length: 14 }).map((_, i) => (
+        <mesh
+          key={`slat-${i}`}
+          position={[-halfW + 0.6 + i * 1.0, height / 2, -halfD + 0.04]}
+          castShadow
+        >
+          <boxGeometry args={[0.08, height * 0.85, 0.04]} />
+          <meshStandardMaterial color={p.woodDark} roughness={0.75} />
+        </mesh>
+      ))}
+      {/* wainscot rail */}
+      <mesh position={[0, 1.15, -halfD + 0.05]}>
+        <boxGeometry args={[halfW * 2, 0.08, 0.06]} />
+        <meshStandardMaterial color={p.wood} roughness={0.55} />
       </mesh>
       {/* right wall */}
       <mesh position={[halfW, height / 2, 0]} rotation={[0, -Math.PI / 2, 0]} receiveShadow>
@@ -380,6 +510,24 @@ export function Room({
           metalness={0.2}
         />
       </mesh>
+      {/* window sill */}
+      <mesh position={[-halfW + 0.25, 0.55, 0]} castShadow receiveShadow>
+        <boxGeometry args={[0.5, 0.08, halfD * 1.95]} />
+        <meshStandardMaterial color={p.wood} roughness={0.45} />
+      </mesh>
+      {/* soft linen panels between mullions */}
+      {[-3, 0, 3].map((z) => (
+        <mesh key={`linen-${z}`} position={[-halfW + 0.12, height * 0.55, z]}>
+          <planeGeometry args={[2.4, height * 0.55]} />
+          <meshStandardMaterial
+            color="#ebe0cf"
+            transparent
+            opacity={0.35}
+            roughness={0.9}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+      ))}
 
       {/* ----------------------- Hinoki counter ----------------------- */}
       <RoundedBox
@@ -407,6 +555,14 @@ export function Room({
           netaColor={["#d8593a", "#e8a26a", "#c9455c", "#e0b26a", "#d8593a"][i]}
         />
       ))}
+      <CuttingBoard position={[-3.6, 1.14, -5.35]} />
+      {/* soy bottles on counter */}
+      {[-0.8, 1.4].map((x) => (
+        <Bottle key={`soy-${x}`} position={[x, 1.28, -5.5]} color="#2a1a12" />
+      ))}
+      <CeramicCup position={[2.8, 1.16, -4.55]} />
+      <CeramicCup position={[3.1, 1.16, -4.7]} color="#e8dcc8" />
+      <Ikebana position={[4.6, 1.14, -5.2]} />
 
       {/* ----------------------- Sake shelf (right) ------------------- */}
       <group position={[halfW - 0.35, 0, -1]}>
@@ -434,6 +590,58 @@ export function Room({
         <mesh position={[0, 0, 0.01]}>
           <planeGeometry args={[0.5, 1.9]} />
           <meshStandardMaterial color={p.woodDark} roughness={0.9} />
+        </mesh>
+        {/* scroll rods */}
+        <mesh position={[0, 1.18, 0.02]}>
+          <cylinderGeometry args={[0.03, 0.03, 1.0, 10]} />
+          <meshStandardMaterial color={p.wood} roughness={0.5} />
+        </mesh>
+        <mesh position={[0, -1.18, 0.02]}>
+          <cylinderGeometry args={[0.03, 0.03, 1.0, 10]} />
+          <meshStandardMaterial color={p.wood} roughness={0.5} />
+        </mesh>
+      </group>
+      {/* second smaller scroll */}
+      <group position={[3.8, 2.6, -halfD + 0.06]}>
+        <mesh>
+          <planeGeometry args={[0.7, 1.8]} />
+          <meshStandardMaterial color="#ebe0cf" roughness={0.9} />
+        </mesh>
+        <mesh position={[0, 0, 0.01]}>
+          <planeGeometry args={[0.35, 1.4]} />
+          <meshStandardMaterial color="#7a2a24" roughness={0.85} />
+        </mesh>
+      </group>
+
+      {/* ceramic niche shelf on right wall */}
+      <group position={[halfW - 0.2, 2.8, 3.2]}>
+        <mesh castShadow>
+          <boxGeometry args={[0.35, 0.05, 1.4]} />
+          <meshStandardMaterial color={p.woodDark} roughness={0.6} />
+        </mesh>
+        <mesh position={[-0.05, 0.18, -0.35]} castShadow>
+          <sphereGeometry args={[0.12, 12, 12]} />
+          <meshStandardMaterial color="#c9b59a" roughness={0.35} />
+        </mesh>
+        <mesh position={[-0.05, 0.22, 0.35]} castShadow>
+          <cylinderGeometry args={[0.08, 0.1, 0.28, 12]} />
+          <meshStandardMaterial color="#8a5a3a" roughness={0.4} />
+        </mesh>
+      </group>
+
+      {/* entrance door frame */}
+      <group position={[0, 0, halfD - 0.08]}>
+        <mesh position={[-1.7, height / 2, 0]}>
+          <boxGeometry args={[0.12, height, 0.14]} />
+          <meshStandardMaterial color={p.woodDark} roughness={0.55} />
+        </mesh>
+        <mesh position={[1.7, height / 2, 0]}>
+          <boxGeometry args={[0.12, height, 0.14]} />
+          <meshStandardMaterial color={p.woodDark} roughness={0.55} />
+        </mesh>
+        <mesh position={[0, height - 0.2, 0]}>
+          <boxGeometry args={[3.5, 0.14, 0.14]} />
+          <meshStandardMaterial color={p.woodDark} roughness={0.55} />
         </mesh>
       </group>
 

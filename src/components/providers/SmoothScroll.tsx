@@ -4,23 +4,23 @@ import { useEffect } from "react";
 import Lenis from "lenis";
 
 /**
- * Buttery momentum scrolling via Lenis, wired into GSAP's ticker elsewhere
- * through the shared instance on window. Automatically disabled when the user
- * prefers reduced motion.
+ * Momentum scrolling via Lenis on desktop only. Touch devices keep native
+ * scrolling — smoother, less jank with the mobile URL bar, and fewer layout jumps.
  */
 export function SmoothScroll({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
+    const touch =
+      window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window;
+    if (reduce || touch) return;
 
     const lenis = new Lenis({
       duration: 1.15,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
-      touchMultiplier: 1.5,
+      touchMultiplier: 1.2,
     });
 
-    // expose for anchor-scrolling helpers
     (window as unknown as { lenis?: Lenis }).lenis = lenis;
 
     let frame = 0;

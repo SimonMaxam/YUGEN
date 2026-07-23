@@ -51,9 +51,9 @@ export function AmbientCanvas() {
     const pointer = { x: -9999, y: -9999, px: -9999, py: -9999, active: false };
 
     // ---- entity pools -----------------------------------------------------
-    const DUST = reduce ? 0 : mobile ? 34 : 90;
-    const RICE = reduce ? 0 : mobile ? 5 : 11;
-    const KOI = reduce ? 0 : mobile ? 1 : 3;
+    const DUST = reduce ? 0 : mobile ? 14 : 70;
+    const RICE = reduce ? 0 : mobile ? 2 : 10;
+    const KOI = reduce ? 0 : mobile ? 0 : 3;
 
     interface Dust { x: number; y: number; z: number; r: number; sx: number; sy: number; ph: number; }
     interface Rice { x: number; y: number; vx: number; vy: number; a: number; va: number; len: number; }
@@ -110,7 +110,7 @@ export function AmbientCanvas() {
     }
 
     function resize() {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dpr = Math.min(window.devicePixelRatio || 1, mobile ? 1.25 : 1.75);
       W = window.innerWidth;
       H = window.innerHeight;
       canvas.width = W * dpr;

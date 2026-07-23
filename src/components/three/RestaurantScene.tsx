@@ -21,9 +21,8 @@ function OrbitReset() {
 }
 
 /**
- * Lightweight outdoor view for the glass wall — one canvas texture + a few
- * cheap meshes. Replaces the multi-megabyte EXR so the room starts instantly
- * and stays within a phone's GPU budget.
+ * Lightweight outdoor view for the glass wall — one canvas texture + soft
+ * canopy silhouettes. No HDRI download.
  */
 function OutdoorBackdrop() {
   const sky = useMemo(() => {
@@ -48,13 +47,14 @@ function OutdoorBackdrop() {
     return t;
   }, []);
 
-  // Soft distant canopy / hill silhouettes outside the glass.
-  const hills = useMemo(
+  const trees = useMemo(
     () =>
       [
-        { z: -8, y: 1.1, s: [14, 3.2, 1] as [number, number, number], c: "#5a6840" },
-        { z: -2, y: 0.7, s: [10, 2.2, 1] as [number, number, number], c: "#4d5a36" },
-        { z: 6, y: 0.9, s: [12, 2.6, 1] as [number, number, number], c: "#55623c" },
+        { z: -7, y: 1.8, r: 2.2, c: "#5a6840" },
+        { z: -3, y: 1.4, r: 1.7, c: "#4d5a36" },
+        { z: 1.5, y: 1.6, r: 2.0, c: "#55623c" },
+        { z: 6, y: 1.5, r: 1.9, c: "#4f5c38" },
+        { z: 9, y: 1.2, r: 1.4, c: "#5a6840" },
       ] as const,
     [],
   );
@@ -67,19 +67,21 @@ function OutdoorBackdrop() {
         <planeGeometry args={[42, 28]} />
         <meshBasicMaterial map={sky} toneMapped={false} fog={false} />
       </mesh>
-      {/* warm ground strip beyond the glass */}
-      <mesh
-        position={[x + 1.5, 0.01, 0]}
-        rotation={[-Math.PI / 2, 0, 0]}
-      >
+      <mesh position={[x + 1.5, 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[10, 40]} />
         <meshBasicMaterial color="#6a7a48" toneMapped={false} fog={false} />
       </mesh>
-      {hills.map((h, i) => (
-        <mesh key={i} position={[x + 0.4, h.y, h.z]}>
-          <boxGeometry args={h.s} />
-          <meshBasicMaterial color={h.c} toneMapped={false} fog={false} />
-        </mesh>
+      {trees.map((t, i) => (
+        <group key={i} position={[x + 0.6, 0, t.z]}>
+          <mesh position={[0, 0.5, 0]}>
+            <cylinderGeometry args={[0.12, 0.18, 1.0, 6]} />
+            <meshBasicMaterial color="#3a2e22" toneMapped={false} fog={false} />
+          </mesh>
+          <mesh position={[0, t.y, 0]}>
+            <sphereGeometry args={[t.r, 10, 10]} />
+            <meshBasicMaterial color={t.c} toneMapped={false} fog={false} />
+          </mesh>
+        </group>
       ))}
     </group>
   );

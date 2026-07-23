@@ -21,7 +21,7 @@ export function ControlDock() {
   const shownEnabled = mounted ? audio.enabled : false;
 
   return (
-    <div className="fixed bottom-5 right-5 z-[60] flex items-center gap-2 md:bottom-7 md:right-7">
+    <div className="fixed bottom-4 right-4 z-[60] flex items-center gap-2 sm:bottom-5 sm:right-5 md:bottom-7 md:right-7">
       <button
         onClick={cycle}
         aria-label={`Ambience: ${
