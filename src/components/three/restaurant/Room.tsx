@@ -258,14 +258,18 @@ export function Room({
   p,
   mode,
   reflections,
+  lowPower = false,
   onSelect,
 }: {
   p: Palette;
   mode: "orbit" | "walk";
   reflections: boolean;
+  lowPower?: boolean;
   onSelect: (i: number) => void;
 }) {
   const { halfW, halfD, height } = ROOM;
+  // Smaller shadow atlas = less VRAM. Phones skip real-time shadows entirely.
+  const shadowSize = lowPower ? 512 : 1024;
 
   return (
     <group>
@@ -276,12 +280,12 @@ export function Room({
         position={[-9, 7, 4]}
         intensity={p.sun}
         color={p.sunColor}
-        castShadow
-        shadow-mapSize={[1536, 1536]}
-        shadow-camera-left={-12}
-        shadow-camera-right={12}
-        shadow-camera-top={12}
-        shadow-camera-bottom={-12}
+        castShadow={!lowPower}
+        shadow-mapSize={[shadowSize, shadowSize]}
+        shadow-camera-left={-10}
+        shadow-camera-right={10}
+        shadow-camera-top={10}
+        shadow-camera-bottom={-10}
         shadow-bias={-0.0004}
       />
 
@@ -290,16 +294,16 @@ export function Room({
         <planeGeometry args={[halfW * 2, halfD * 2]} />
         {reflections ? (
           <MeshReflectorMaterial
-            resolution={512}
+            resolution={256}
             mixBlur={1}
-            mixStrength={2.2}
-            blur={[300, 80]}
-            roughness={0.75}
-            depthScale={1.1}
+            mixStrength={1.6}
+            blur={[180, 60]}
+            roughness={0.78}
+            depthScale={1.0}
             minDepthThreshold={0.4}
             maxDepthThreshold={1.2}
             color={p.floor}
-            metalness={0.35}
+            metalness={0.28}
           />
         ) : (
           <meshStandardMaterial color={p.floor} roughness={0.65} metalness={0.1} />
@@ -350,9 +354,9 @@ export function Room({
         <meshStandardMaterial color={p.wallWarm} roughness={0.96} />
       </mesh>
 
-      {/* left = floor-to-ceiling glass. We leave the opening clear so the EXR
-          sky shows through, and frame it with dark mullions + a faint glass
-          reflection pane. */}
+      {/* left = floor-to-ceiling glass. Opening is clear so the procedural
+          outdoor backdrop shows through, framed by dark mullions + a faint
+          glass sheen. */}
       {[-4.5, -1.5, 1.5, 4.5].map((z) => (
         <mesh key={`v${z}`} position={[-halfW + 0.05, height / 2, z]} castShadow>
           <boxGeometry args={[0.08, height, 0.12]} />
@@ -463,22 +467,39 @@ export function Room({
       </mesh>
 
       {/* --------------------- Lanterns & pendants -------------------- */}
-      <Lantern position={[-2.2, 3.1, 3.4]} intensity={p.lantern} />
-      <Lantern position={[2.6, 3.1, 2]} intensity={p.lantern} />
-      <Lantern position={[0.5, 2.6, -5]} intensity={p.lantern} withLight={p.lantern > 1} />
+      {/* Point lights are expensive — on low-power only render the emissive
+          shells (withLight=false) so we keep the look without the cost. */}
+      <Lantern
+        position={[-2.2, 3.1, 3.4]}
+        intensity={p.lantern}
+        withLight={!lowPower}
+      />
+      <Lantern
+        position={[2.6, 3.1, 2]}
+        intensity={p.lantern}
+        withLight={!lowPower}
+      />
+      <Lantern
+        position={[0.5, 2.6, -5]}
+        intensity={p.lantern}
+        withLight={!lowPower && p.lantern > 1}
+      />
 
       {/* corner plants */}
       <Plant position={[-halfW + 1, 0, halfD - 1.2]} />
       <Plant position={[halfW - 1.2, 0, halfD - 1.2]} />
 
-      <ContactShadows
-        position={[0, 0.02, 0]}
-        opacity={0.42}
-        scale={halfW * 2.4}
-        blur={2.4}
-        far={6}
-        color="#000000"
-      />
+      {!lowPower && (
+        <ContactShadows
+          position={[0, 0.02, 0]}
+          opacity={0.38}
+          scale={halfW * 2.4}
+          blur={2.2}
+          far={5}
+          resolution={256}
+          color="#000000"
+        />
+      )}
     </group>
   );
 }

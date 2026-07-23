@@ -51,7 +51,7 @@ export interface Palette {
   sunColor: string;
   envIntensity: number;
   lantern: number;
-  showSky: boolean; // show the EXR as visible background (day/evening only)
+  showSky: boolean; // warm outdoor backdrop visible through the glass wall
   bg: string;
 }
 
