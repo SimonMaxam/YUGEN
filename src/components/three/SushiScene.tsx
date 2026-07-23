@@ -18,31 +18,58 @@ import {
   ServingBoard,
 } from "./SushiModels";
 
-type Tilt = { x: number; y: number };
+type Look = { x: number; y: number };
 
-/** Pointer + phone-gyro parallax for the floating sushi group. */
+/**
+ * Tilts the sushi group toward the cursor (and phone gyro). Mouse is tracked
+ * on `window` because the canvas itself has pointer-events: none so CTAs stay
+ * clickable — R3F's built-in `state.pointer` would stay stuck at 0 otherwise.
+ */
 function ParallaxRig({
-  tilt,
+  gyro,
   children,
 }: {
-  tilt: React.MutableRefObject<Tilt>;
+  gyro: React.MutableRefObject<Look>;
   children: React.ReactNode;
 }) {
   const group = useRef<THREE.Group>(null);
-  useFrame((state, delta) => {
+  const mouse = useRef<Look>({ x: 0, y: 0 });
+
+  useEffect(() => {
+    function onMove(e: PointerEvent) {
+      // -1 … 1 from the centre of the viewport
+      mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouse.current.y = -((e.clientY / window.innerHeight) * 2 - 1);
+    }
+    function onLeave() {
+      mouse.current.x = 0;
+      mouse.current.y = 0;
+    }
+    window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("blur", onLeave);
+    document.addEventListener("mouseleave", onLeave);
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("blur", onLeave);
+      document.removeEventListener("mouseleave", onLeave);
+    };
+  }, []);
+
+  useFrame((_, delta) => {
     if (!group.current) return;
-    const targetX = state.pointer.y * 0.14 + tilt.current.x * 0.35;
-    const targetY = state.pointer.x * 0.28 + tilt.current.y * 0.45;
+    // Mouse drives the look; gyro adds on top for phones.
+    const targetX = mouse.current.y * 0.38 + gyro.current.x * 0.4;
+    const targetY = mouse.current.x * 0.55 + gyro.current.y * 0.5;
     group.current.rotation.x = THREE.MathUtils.damp(
       group.current.rotation.x,
-      THREE.MathUtils.clamp(targetX, -0.45, 0.45),
-      3.2,
+      THREE.MathUtils.clamp(targetX, -0.55, 0.55),
+      4,
       delta,
     );
     group.current.rotation.y = THREE.MathUtils.damp(
       group.current.rotation.y,
-      THREE.MathUtils.clamp(targetY, -0.7, 0.7),
-      3.2,
+      THREE.MathUtils.clamp(targetY, -0.85, 0.85),
+      4,
       delta,
     );
   });
@@ -78,10 +105,9 @@ function Piece({
 }
 
 function Scene({ lite }: { lite: boolean }) {
-  const tilt = useRef<Tilt>({ x: 0, y: 0 });
+  const gyro = useRef<Look>({ x: 0, y: 0 });
 
   useEffect(() => {
-    if (!lite) return;
     let baseBeta: number | null = null;
     let baseGamma: number | null = null;
 
@@ -92,13 +118,13 @@ function Scene({ lite }: { lite: boolean }) {
         baseBeta = beta;
         baseGamma = gamma;
       }
-      tilt.current.x = THREE.MathUtils.clamp((beta - (baseBeta ?? 0)) / 28, -1, 1);
-      tilt.current.y = THREE.MathUtils.clamp((gamma - (baseGamma ?? 0)) / 28, -1, 1);
+      gyro.current.x = THREE.MathUtils.clamp((beta - (baseBeta ?? 0)) / 28, -1, 1);
+      gyro.current.y = THREE.MathUtils.clamp((gamma - (baseGamma ?? 0)) / 28, -1, 1);
     }
 
     window.addEventListener("deviceorientation", onOrient, { passive: true });
     return () => window.removeEventListener("deviceorientation", onOrient);
-  }, [lite]);
+  }, []);
 
   return (
     <>
@@ -124,7 +150,7 @@ function Scene({ lite }: { lite: boolean }) {
         </>
       )}
 
-      <ParallaxRig tilt={tilt}>
+      <ParallaxRig gyro={gyro}>
         <Piece
           position={[0, -0.15, 0.4]}
           rotation={[0.12, 0.15, 0]}
