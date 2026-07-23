@@ -77,6 +77,30 @@ export function Footer() {
           <span>
             © {new Date().getFullYear()} {site.name}. Crafted with intention.
           </span>
+
+          <Link
+            href="/about"
+            className="group inline-flex items-center gap-2 transition-colors hover:text-ink"
+            aria-label="About the developer, Simon Maxam"
+          >
+            <span>Designed &amp; built by</span>
+            <span className="text-muted transition-colors group-hover:text-accent">
+              Simon Maxam
+            </span>
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              aria-hidden
+              className="text-accent transition-transform duration-500 group-hover:scale-125"
+            >
+              <path
+                d="M12 21s-7.2-4.6-9.6-9C1 9 2.6 5.5 6 5.5c2 0 3.2 1.2 4 2.4.8-1.2 2-2.4 4-2.4 3.4 0 5 3.5 3.6 6.5-2.4 4.4-9.6 9-9.6 9z"
+                fill="currentColor"
+              />
+            </svg>
+          </Link>
+
           <span className="font-jp">一期一会 · ichigo ichie</span>
         </div>
       </div>

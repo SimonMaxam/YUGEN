@@ -34,21 +34,24 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     setEnabled(v);
   }, []);
 
-  const fadeTo = useCallback((target: number, onDone?: () => void) => {
-    const el = audioRef.current;
-    if (!el) return;
-    if (fadeRef.current) clearInterval(fadeRef.current);
-    const start = el.volume;
-    const startTime = performance.now();
-    fadeRef.current = setInterval(() => {
-      const t = Math.min(1, (performance.now() - startTime) / FADE_MS);
-      el.volume = start + (target - start) * t;
-      if (t >= 1) {
-        if (fadeRef.current) clearInterval(fadeRef.current);
-        onDone?.();
-      }
-    }, 40);
-  }, []);
+  const fadeTo = useCallback(
+    (target: number, onDone?: () => void, ms: number = FADE_MS) => {
+      const el = audioRef.current;
+      if (!el) return;
+      if (fadeRef.current) clearInterval(fadeRef.current);
+      const start = el.volume;
+      const startTime = performance.now();
+      fadeRef.current = setInterval(() => {
+        const t = Math.min(1, (performance.now() - startTime) / ms);
+        el.volume = Math.max(0, Math.min(1, start + (target - start) * t));
+        if (t >= 1) {
+          if (fadeRef.current) clearInterval(fadeRef.current);
+          onDone?.();
+        }
+      }, 40);
+    },
+    [],
+  );
 
   const persist = (value: "on" | "off") => {
     try {
@@ -138,16 +141,39 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Gently duck the audio when the tab is hidden.
+  // When the visitor looks away (tab hidden or window blurred) fade the track
+  // all the way out and pause it; when they return, resume and fade it back in.
   useEffect(() => {
-    function onVisibility() {
+    function away() {
       const el = audioRef.current;
       if (!el || !enabledRef.current) return;
-      if (document.hidden) fadeTo(0.08);
-      else fadeTo(TARGET_VOLUME);
+      fadeTo(
+        0,
+        () => {
+          if (audioRef.current && enabledRef.current) audioRef.current.pause();
+        },
+        2200,
+      );
+    }
+    function back() {
+      const el = audioRef.current;
+      if (!el || !enabledRef.current) return;
+      el.play()
+        .then(() => fadeTo(TARGET_VOLUME, undefined, 1800))
+        .catch(() => {});
+    }
+    function onVisibility() {
+      if (document.hidden) away();
+      else back();
     }
     document.addEventListener("visibilitychange", onVisibility);
-    return () => document.removeEventListener("visibilitychange", onVisibility);
+    window.addEventListener("blur", away);
+    window.addEventListener("focus", back);
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
+      window.removeEventListener("blur", away);
+      window.removeEventListener("focus", back);
+    };
   }, [fadeTo]);
 
   const value = useMemo(

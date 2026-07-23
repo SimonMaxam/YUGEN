@@ -130,7 +130,11 @@ export function Experience() {
           ref={wrapRef}
           className="relative mt-12 overflow-hidden rounded-3xl border border-line/60 bg-bg/40"
         >
-          <div className="relative h-[72svh] min-h-[480px] w-full">
+          <div
+            className={`relative h-[72svh] min-h-[480px] w-full ${
+              mode === "walk" ? "touch-none overscroll-none select-none" : ""
+            }`}
+          >
             {inView && (
               <SceneErrorBoundary fallback={<SceneFallback />}>
                 <RestaurantScene
