@@ -8,11 +8,18 @@ import { GalleryPreview } from "@/sections/GalleryPreview";
 import { Testimonials } from "@/sections/Testimonials";
 import { Newsletter } from "@/sections/Newsletter";
 import { Visit } from "@/sections/Visit";
+import { FAQ } from "@/sections/FAQ";
 import { KanjiMarquee } from "@/components/ui/KanjiMarquee";
+import { faqs } from "@/lib/faq";
+import { faqSchema } from "@/lib/schema";
 
 export default function HomePage() {
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema(faqs)) }}
+      />
       <Hero />
       <Awards />
       <Story />
@@ -23,6 +30,7 @@ export default function HomePage() {
       <GalleryPreview />
       <Testimonials />
       <Newsletter />
+      <FAQ />
       <Visit />
     </>
   );

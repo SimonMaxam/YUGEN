@@ -10,7 +10,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { Magnetic } from "@/components/ui/Magnetic";
-import { HeroStillBackdrop } from "@/components/hero/HeroStillBackdrop";
+import { HeroMobileStage } from "@/components/hero/HeroMobileStage";
 import { shouldAutoLoad3D } from "@/lib/device";
 import { site } from "@/lib/site";
 
@@ -38,22 +38,6 @@ export function Hero() {
     setIsTouch(touch);
     setMountScene(shouldAutoLoad3D());
   }, []);
-
-  useEffect(() => {
-    if (!isTouch) return;
-    type DOE = {
-      requestPermission?: () => Promise<"granted" | "denied" | "default">;
-    };
-    const DOE = DeviceOrientationEvent as unknown as DOE;
-    if (typeof DOE.requestPermission !== "function") return;
-
-    const ask = () => {
-      DOE.requestPermission?.().catch(() => {});
-      window.removeEventListener("pointerdown", ask);
-    };
-    window.addEventListener("pointerdown", ask, { once: true, passive: true });
-    return () => window.removeEventListener("pointerdown", ask);
-  }, [isTouch]);
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -91,12 +75,12 @@ export function Hero() {
           {mountScene ? (
             <SushiScene progressRef={progressRef} />
           ) : (
-            <HeroStillBackdrop />
+            <HeroMobileStage scrollProgress={progressLabel} />
           )}
         </div>
 
         <div
-          className="pointer-events-none absolute inset-0 z-[1]"
+          className="pointer-events-none absolute inset-0 z-[1] max-md:opacity-60"
           style={{
             background:
               "radial-gradient(120% 90% at 50% 8%, rgb(var(--glow)/0.5), transparent 55%)",
@@ -106,14 +90,14 @@ export function Hero() {
         {/* Stage 1 — brand + CTAs */}
         <motion.div
           style={{ y: contentY, opacity: contentOpacity, scale: contentScale }}
-          className="relative z-20 mx-auto flex h-full w-full max-w-5xl flex-col items-center justify-center px-6 text-center"
+          className="relative z-20 mx-auto flex h-full w-full max-w-5xl flex-col items-center px-6 text-center max-md:justify-end max-md:pb-28 max-md:pt-[46vh] md:justify-center"
         >
           <div
             aria-hidden
-            className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-[110%] w-[95%] -translate-x-1/2 -translate-y-1/2 rounded-[50%] blur-2xl"
+            className="pointer-events-none absolute left-1/2 bottom-0 -z-10 h-[55%] w-full max-w-lg -translate-x-1/2 rounded-t-[40%] blur-2xl md:top-1/2 md:h-[110%] md:w-[95%] md:-translate-y-1/2 md:rounded-[50%]"
             style={{
               background:
-                "radial-gradient(closest-side, rgb(var(--c-bg)/0.62), rgb(var(--c-bg)/0.28) 50%, transparent 72%)",
+                "radial-gradient(closest-side, rgb(var(--c-bg)/0.78), rgb(var(--c-bg)/0.35) 55%, transparent 78%)",
             }}
           />
 
@@ -128,7 +112,7 @@ export function Hero() {
             <span className="h-px w-10 bg-accent/60" />
           </motion.div>
 
-          <h1 className="font-serif text-fluid-hero font-light leading-[0.86] text-ink">
+          <h1 className="font-serif text-[clamp(2.15rem,11vw,3.35rem)] font-light leading-[0.92] text-ink md:text-fluid-hero md:leading-[0.86]">
             <OverflowLine delay={0.3}>{site.name}</OverflowLine>
             <span className="sr-only">
               {" "}
@@ -140,7 +124,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.7 }}
-            className="mt-7 max-w-md text-balance text-base font-medium leading-relaxed text-ink/85 md:text-lg"
+            className="mt-4 max-w-md text-balance text-sm font-medium leading-relaxed text-ink/85 max-md:mt-3 md:mt-7 md:text-base md:text-lg"
           >
             {site.tagline}. An intimate omakase counter where the season, the
             light and the hand of the chef become one quiet ritual.
@@ -150,7 +134,7 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.9 }}
-            className="relative z-30 mt-10 flex w-full max-w-sm flex-col items-stretch gap-3 pb-20 sm:max-w-none sm:flex-row sm:items-center sm:justify-center sm:gap-5 sm:pb-0"
+            className="relative z-30 mt-6 flex w-full max-w-sm flex-col items-stretch gap-3 pb-4 sm:max-w-none sm:flex-row sm:items-center sm:justify-center sm:gap-5 md:mt-10 md:pb-0"
           >
             <Cta href="/reservations" primary magnetic={!isTouch}>
               Reserve a table

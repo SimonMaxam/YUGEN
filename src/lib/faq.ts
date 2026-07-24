@@ -23,4 +23,16 @@ export const faqs = [
     q: "Do you offer sake and wine pairings?",
     a: "Yes — an optional sake flight and a sommelier-led wine pairing are available with every omakase, alongside non-alcoholic tea pairings.",
   },
+  {
+    q: "What does omakase cost?",
+    a: "Our counter omakase is priced per guest and changes with the market. Signature à la carte pieces are listed on the menu. The team confirms the full tasting price when your reservation is confirmed.",
+  },
+  {
+    q: "Is parking available?",
+    a: "Street parking is available on Ashgrove Lane and nearby blocks after 6 p.m. We recommend rideshare for Friday and Saturday seatings when the neighborhood is busiest.",
+  },
+  {
+    q: "Are children welcome?",
+    a: "We welcome guests of all ages at table seatings. The counter omakase is a quiet, multi-course experience; we suggest it for guests who are comfortable sitting for about two hours.",
+  },
 ];

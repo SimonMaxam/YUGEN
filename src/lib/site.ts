@@ -61,6 +61,7 @@ export const navLinks: NavLink[] = [
   { label: "Menu", href: "/menu", jp: "献立" },
   { label: "Experience", href: "/#experience", jp: "体験" },
   { label: "Gallery", href: "/gallery", jp: "写真" },
+  { label: "FAQ", href: "/#faq", jp: "質問" },
   { label: "Reserve", href: "/reservations", jp: "予約" },
   { label: "Contact", href: "/contact", jp: "連絡" },
 ];
