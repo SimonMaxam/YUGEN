@@ -5,6 +5,7 @@ import { site } from "@/lib/site";
 import { restaurantSchema, websiteSchema } from "@/lib/schema";
 import { Providers } from "@/components/providers/Providers";
 import { Nav } from "@/components/layout/Nav";
+import { MobileBottomBar } from "@/components/layout/MobileBottomBar";
 import { Footer } from "@/components/layout/Footer";
 import { ExperienceShell } from "@/components/experience/ExperienceShell";
 
@@ -112,7 +113,10 @@ export default function RootLayout({
             Skip to content
           </a>
           <Nav />
-          <main id="main">{children}</main>
+          <main id="main" className="pb-[calc(4.5rem+env(safe-area-inset-bottom))] lg:pb-0">
+            {children}
+          </main>
+          <MobileBottomBar />
           <Footer />
           <ExperienceShell />
         </Providers>

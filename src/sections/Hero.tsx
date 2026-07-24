@@ -151,13 +151,17 @@ export function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.9, delay: 0.9 }}
-            className="relative z-30 mt-10 flex w-full max-w-sm flex-col items-stretch gap-3 pb-16 sm:max-w-none sm:flex-row sm:items-center sm:justify-center sm:gap-5 sm:pb-0"
+            className="relative z-30 mt-10 flex w-full max-w-sm flex-col items-stretch gap-3 pb-20 sm:max-w-none sm:flex-row sm:items-center sm:justify-center sm:gap-5 sm:pb-0"
           >
             <Cta href="/reservations" primary magnetic={!isTouch}>
-              Reserve a seating
+              Reserve a table
             </Cta>
+            <span
+              aria-hidden
+              className="hidden h-px w-8 bg-line/80 sm:block"
+            />
             <Cta href="/menu" magnetic={!isTouch}>
-              View the menu
+              Browse menu
             </Cta>
           </motion.div>
         </motion.div>
@@ -223,7 +227,7 @@ function Cta({
     : "relative z-10 inline-flex w-full min-h-12 items-center justify-center rounded-full border border-ink/40 bg-elevated/50 px-9 py-4 text-[0.72rem] uppercase tracking-wider2 text-ink backdrop-blur-sm transition-all duration-500 hover:border-accent hover:bg-elevated/70 hover:text-accent sm:w-auto";
 
   const link = (
-    <Link href={href} className={cls}>
+    <Link href={href} prefetch={false} className={cls}>
       {children}
     </Link>
   );

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { navLinks, site } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { StickyReserve } from "./StickyReserve";
 
 export function Nav() {
   const [hidden, setHidden] = useState(false);
@@ -40,17 +41,26 @@ export function Nav() {
       >
         <nav
           aria-label="Primary"
-          className="mx-auto flex max-w-[1400px] items-center justify-between px-5 py-4 md:px-10 md:py-5"
+          className="mx-auto grid max-w-[1400px] grid-cols-[3rem_1fr_auto] items-center gap-2 px-5 py-4 md:px-10 md:py-5 lg:flex lg:justify-between"
         >
+          <button
+            onClick={() => setOpen(true)}
+            aria-label="Open menu"
+            className="flex h-12 w-12 min-h-12 min-w-12 flex-col items-center justify-center gap-[5px] justify-self-start lg:hidden"
+          >
+            <span className="h-px w-6 bg-ink" />
+            <span className="h-px w-6 bg-ink" />
+          </button>
+
           <Link
             href="/"
-            className="group flex items-baseline gap-2"
+            className="group flex items-baseline justify-center gap-2 justify-self-center lg:justify-start"
             aria-label={`${site.name} home`}
           >
             <span className="font-serif text-2xl tracking-tight text-ink transition-colors group-hover:text-accent">
               {site.name}
             </span>
-            <span className="font-jp text-sm text-muted">{site.nameJp}</span>
+            <span className="hidden font-jp text-sm text-muted sm:inline">{site.nameJp}</span>
           </Link>
 
           <ul className="hidden items-center gap-8 lg:flex">
@@ -58,6 +68,7 @@ export function Nav() {
               <li key={l.href}>
                 <Link
                   href={l.href}
+                  prefetch={l.href.startsWith("/#") ? undefined : false}
                   className="ink-underline text-[0.72rem] uppercase tracking-wider2 text-muted transition-colors hover:text-ink"
                 >
                   {l.label}
@@ -66,66 +77,128 @@ export function Nav() {
             ))}
           </ul>
 
-          <div className="flex items-center gap-3">
-            <Link
-              href="/reservations"
-              className="hidden min-h-12 items-center rounded-full border border-ink/20 px-5 py-3 text-[0.68rem] uppercase tracking-wider2 text-ink transition-all duration-500 hover:border-accent hover:text-accent sm:inline-flex"
-            >
-              Reserve
-            </Link>
-            <button
-              onClick={() => setOpen(true)}
-              aria-label="Open menu"
-              className="flex h-12 w-12 min-h-12 min-w-12 flex-col items-center justify-center gap-[5px] lg:hidden"
-            >
-              <span className="h-px w-6 bg-ink" />
-              <span className="h-px w-6 bg-ink" />
-            </button>
-          </div>
+          <Link
+            href="/reservations"
+            prefetch={false}
+            className="inline-flex min-h-11 items-center justify-self-end rounded-full border border-ink/20 bg-elevated/40 px-4 py-2.5 text-[0.62rem] uppercase tracking-wider2 text-ink backdrop-blur-sm transition-all duration-500 hover:border-accent hover:text-accent lg:min-h-12 lg:px-5 lg:py-3 lg:text-[0.68rem]"
+          >
+            Reserve
+          </Link>
         </nav>
       </motion.header>
 
+      <StickyReserve hidden={open} />
+
       <AnimatePresence>
         {open && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5 }}
-            className="fixed inset-0 z-[70] flex flex-col bg-bg/98 backdrop-blur-xl"
-          >
-            <div className="flex items-center justify-between px-5 py-4 md:px-10">
-              <span className="font-serif text-2xl text-ink">{site.name}</span>
-              <button
-                onClick={() => setOpen(false)}
-                aria-label="Close menu"
-                className="flex h-12 w-12 min-h-12 min-w-12 items-center justify-center text-ink"
-              >
-                <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden>
-                  <path d="M5 5l14 14M19 5L5 19" stroke="currentColor" strokeWidth="1.4" />
-                </svg>
-              </button>
-            </div>
-            <ul className="flex flex-1 flex-col justify-center gap-2 px-8">
-              {navLinks.map((l, i) => (
-                <motion.li
-                  key={l.href}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.1 + i * 0.06, duration: 0.6 }}
+          <>
+            <motion.button
+              type="button"
+              aria-label="Close menu"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 z-[69] bg-bg/60 backdrop-blur-sm lg:hidden"
+              onClick={() => setOpen(false)}
+            />
+            <motion.aside
+              initial={{ x: "-100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "-100%" }}
+              transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+              className="fixed inset-y-0 left-0 z-[70] flex w-[min(100%,22rem)] flex-col border-r border-line/60 bg-bg/96 shadow-2xl backdrop-blur-2xl lg:hidden"
+            >
+              <div className="flex items-center justify-between px-5 py-4">
+                <span className="font-serif text-2xl text-ink">{site.name}</span>
+                <button
+                  onClick={() => setOpen(false)}
+                  aria-label="Close menu"
+                  className="flex h-12 w-12 min-h-12 min-w-12 items-center justify-center text-ink"
                 >
-                  <Link
-                    href={l.href}
-                    onClick={() => setOpen(false)}
-                    className="flex items-baseline justify-between border-b border-line/60 py-4"
+                  <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden>
+                    <path d="M5 5l14 14M19 5L5 19" stroke="currentColor" strokeWidth="1.4" />
+                  </svg>
+                </button>
+              </div>
+
+              <ul className="flex flex-1 flex-col gap-1 overflow-y-auto px-6 pb-8 pt-4">
+                {navLinks.map((l, i) => (
+                  <motion.li
+                    key={l.href}
+                    initial={{ opacity: 0, x: -24 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.06 + i * 0.05, duration: 0.5 }}
                   >
-                    <span className="font-serif text-4xl text-ink">{l.label}</span>
-                    <span className="font-jp text-base text-muted">{l.jp}</span>
-                  </Link>
-                </motion.li>
-              ))}
-            </ul>
-          </motion.div>
+                    <Link
+                      href={l.href}
+                      prefetch={l.href.startsWith("/#") ? undefined : false}
+                      onClick={() => setOpen(false)}
+                      className="flex min-h-14 items-baseline justify-between border-b border-line/50 py-3"
+                    >
+                      <span className="font-serif text-[clamp(2rem,9vw,2.75rem)] leading-none text-ink">
+                        {l.label}
+                      </span>
+                      {l.jp && (
+                        <span className="font-jp text-sm text-muted">{l.jp}</span>
+                      )}
+                    </Link>
+                  </motion.li>
+                ))}
+              </ul>
+
+              <div className="border-t border-line/60 p-5">
+                <Link
+                  href="/reservations"
+                  prefetch={false}
+                  onClick={() => setOpen(false)}
+                  className="flex min-h-12 w-full items-center justify-center rounded-full bg-accent text-[0.68rem] uppercase tracking-wider2 text-bg transition-all duration-500 hover:brightness-110"
+                >
+                  Reserve a table
+                </Link>
+              </div>
+            </motion.aside>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
+              className="fixed inset-0 z-[70] hidden flex-col bg-bg/98 backdrop-blur-xl lg:flex"
+            >
+              <div className="flex items-center justify-between px-5 py-4 md:px-10">
+                <span className="font-serif text-2xl text-ink">{site.name}</span>
+                <button
+                  onClick={() => setOpen(false)}
+                  aria-label="Close menu"
+                  className="flex h-12 w-12 min-h-12 min-w-12 items-center justify-center text-ink"
+                >
+                  <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden>
+                    <path d="M5 5l14 14M19 5L5 19" stroke="currentColor" strokeWidth="1.4" />
+                  </svg>
+                </button>
+              </div>
+              <ul className="flex flex-1 flex-col justify-center gap-2 px-8">
+                {navLinks.map((l, i) => (
+                  <motion.li
+                    key={l.href}
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 + i * 0.06, duration: 0.6 }}
+                  >
+                    <Link
+                      href={l.href}
+                      prefetch={l.href.startsWith("/#") ? undefined : false}
+                      onClick={() => setOpen(false)}
+                      className="flex items-baseline justify-between border-b border-line/60 py-4"
+                    >
+                      <span className="font-serif text-4xl text-ink">{l.label}</span>
+                      <span className="font-jp text-base text-muted">{l.jp}</span>
+                    </Link>
+                  </motion.li>
+                ))}
+              </ul>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>

@@ -99,7 +99,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const el = new Audio(TRACK);
     el.loop = true;
-    el.preload = "auto";
+    el.preload = "none";
     el.volume = 0;
     audioRef.current = el;
 
