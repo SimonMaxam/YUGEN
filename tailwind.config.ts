@@ -32,7 +32,15 @@ const config: Config = {
       fontFamily: {
         serif: ["var(--font-serif)", "Georgia", "serif"],
         sans: ["var(--font-sans)", "system-ui", "sans-serif"],
-        jp: ["var(--font-jp)", "var(--font-serif)", "serif"],
+        jp: [
+          "Hiragino Mincho ProN",
+          "Yu Mincho",
+          "Noto Serif JP",
+          "MS PMincho",
+          "var(--font-serif)",
+          "Georgia",
+          "serif",
+        ],
       },
       letterSpacing: {
         ultra: "0.42em",

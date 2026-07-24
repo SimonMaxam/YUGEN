@@ -219,8 +219,8 @@ function Cta({
   children: React.ReactNode;
 }) {
   const cls = primary
-    ? "relative z-10 inline-flex w-full items-center justify-center rounded-full bg-accent px-9 py-4 text-[0.72rem] uppercase tracking-wider2 text-bg shadow-lg shadow-accent/20 transition-all duration-500 hover:brightness-110 sm:w-auto"
-    : "relative z-10 inline-flex w-full items-center justify-center rounded-full border border-ink/40 bg-elevated/50 px-9 py-4 text-[0.72rem] uppercase tracking-wider2 text-ink backdrop-blur-sm transition-all duration-500 hover:border-accent hover:bg-elevated/70 hover:text-accent sm:w-auto";
+    ? "relative z-10 inline-flex w-full min-h-12 items-center justify-center rounded-full bg-accent px-9 py-4 text-[0.72rem] uppercase tracking-wider2 text-bg shadow-lg shadow-accent/20 transition-all duration-500 hover:brightness-110 sm:w-auto"
+    : "relative z-10 inline-flex w-full min-h-12 items-center justify-center rounded-full border border-ink/40 bg-elevated/50 px-9 py-4 text-[0.72rem] uppercase tracking-wider2 text-ink backdrop-blur-sm transition-all duration-500 hover:border-accent hover:bg-elevated/70 hover:text-accent sm:w-auto";
 
   const link = (
     <Link href={href} className={cls}>

@@ -21,13 +21,13 @@ export function ControlDock() {
   const shownEnabled = mounted ? audio.enabled : false;
 
   return (
-    <div className="fixed bottom-4 right-4 z-[60] flex items-center gap-2 sm:bottom-5 sm:right-5 md:bottom-7 md:right-7">
+    <div className="fixed bottom-4 right-4 z-[60] flex items-center gap-3 sm:bottom-5 sm:right-5 md:bottom-7 md:right-7">
       <button
         onClick={cycle}
         aria-label={`Ambience: ${
           shownAuto ? "Automatic" : timeOfDayLabel[shownTheme]
         }. Click to change.`}
-        className="glass group flex items-center gap-2 rounded-full px-4 py-2.5 text-[0.62rem] uppercase tracking-wider2 text-ink transition-all duration-500 hover:text-accent"
+        className="glass group flex min-h-12 items-center gap-2 rounded-full px-4 py-3 text-[0.62rem] uppercase tracking-wider2 text-ink transition-all duration-500 hover:text-accent"
       >
         <ThemeGlyph theme={shownTheme} />
         <span className="hidden sm:inline">
@@ -39,7 +39,7 @@ export function ControlDock() {
         onClick={audio.toggle}
         aria-pressed={shownEnabled}
         aria-label={shownEnabled ? "Mute ambient sound" : "Play ambient sound"}
-        className="glass flex h-11 w-11 items-center justify-center rounded-full text-ink transition-all duration-500 hover:text-accent"
+        className="glass flex h-12 w-12 min-h-12 min-w-12 items-center justify-center rounded-full text-ink transition-all duration-500 hover:text-accent"
       >
         <MusicNote active={shownEnabled} />
       </button>

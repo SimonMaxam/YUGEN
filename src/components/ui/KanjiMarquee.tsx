@@ -17,7 +17,7 @@ export function KanjiMarquee({
   const x = useTransform(scrollYProgress, [0, 1], ["8%", "-18%"]);
 
   return (
-    <div ref={ref} className="overflow-hidden py-10 md:py-16" aria-hidden>
+    <div ref={ref} className="max-w-full overflow-hidden py-10 md:py-16" aria-hidden>
       <motion.div
         style={{ x }}
         className="whitespace-nowrap font-jp text-[14vw] leading-none text-ink/[0.06] md:text-[9vw]"

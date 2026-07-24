@@ -155,7 +155,7 @@ export function Experience() {
               {mode === "orbit" ? (
                 <button
                   onClick={() => setMode("walk")}
-                  className="glass flex items-center gap-2 rounded-full px-5 py-2.5 text-[0.64rem] uppercase tracking-wider2 text-ink transition-colors hover:text-accent"
+                  className="glass flex min-h-12 items-center gap-2 rounded-full px-5 py-3 text-[0.64rem] uppercase tracking-wider2 text-ink transition-colors hover:text-accent"
                 >
                   <WalkIcon />
                   Walk inside
@@ -163,7 +163,7 @@ export function Experience() {
               ) : (
                 <button
                   onClick={() => setMode("orbit")}
-                  className="glass flex items-center gap-2 rounded-full px-5 py-2.5 text-[0.64rem] uppercase tracking-wider2 text-ink transition-colors hover:text-accent"
+                  className="glass flex min-h-12 items-center gap-2 rounded-full px-5 py-3 text-[0.64rem] uppercase tracking-wider2 text-ink transition-colors hover:text-accent"
                 >
                   <ExitIcon />
                   Exit ({isTouch ? "back" : "Esc"})
@@ -243,7 +243,7 @@ export function Experience() {
               <button
                 onClick={() => setSelected(null)}
                 aria-label="Close"
-                className="absolute right-5 top-5 flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink transition-colors hover:text-accent"
+                className="absolute right-5 top-5 flex h-12 w-12 min-h-12 min-w-12 items-center justify-center rounded-full border border-line text-ink transition-colors hover:text-accent"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden>
                   <path d="M5 5l14 14M19 5L5 19" stroke="currentColor" strokeWidth="1.5" />

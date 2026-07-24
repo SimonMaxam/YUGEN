@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { serif, sans, jp } from "./fonts";
+import { serif, sans } from "./fonts";
 import { site } from "@/lib/site";
 import { restaurantSchema, websiteSchema } from "@/lib/schema";
 import { Providers } from "@/components/providers/Providers";
@@ -88,7 +88,7 @@ export default function RootLayout({
       lang="en"
       data-theme="night"
       suppressHydrationWarning
-      className={`${serif.variable} ${sans.variable} ${jp.variable}`}
+      className={`${serif.variable} ${sans.variable}`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInit }} />

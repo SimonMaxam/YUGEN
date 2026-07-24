@@ -69,14 +69,14 @@ export function Nav() {
           <div className="flex items-center gap-3">
             <Link
               href="/reservations"
-              className="hidden rounded-full border border-ink/20 px-5 py-2.5 text-[0.68rem] uppercase tracking-wider2 text-ink transition-all duration-500 hover:border-accent hover:text-accent sm:inline-block"
+              className="hidden min-h-12 items-center rounded-full border border-ink/20 px-5 py-3 text-[0.68rem] uppercase tracking-wider2 text-ink transition-all duration-500 hover:border-accent hover:text-accent sm:inline-flex"
             >
               Reserve
             </Link>
             <button
               onClick={() => setOpen(true)}
               aria-label="Open menu"
-              className="flex h-10 w-10 flex-col items-center justify-center gap-[5px] lg:hidden"
+              className="flex h-12 w-12 min-h-12 min-w-12 flex-col items-center justify-center gap-[5px] lg:hidden"
             >
               <span className="h-px w-6 bg-ink" />
               <span className="h-px w-6 bg-ink" />
@@ -99,7 +99,7 @@ export function Nav() {
               <button
                 onClick={() => setOpen(false)}
                 aria-label="Close menu"
-                className="flex h-10 w-10 items-center justify-center text-ink"
+                className="flex h-12 w-12 min-h-12 min-w-12 items-center justify-center text-ink"
               >
                 <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden>
                   <path d="M5 5l14 14M19 5L5 19" stroke="currentColor" strokeWidth="1.4" />

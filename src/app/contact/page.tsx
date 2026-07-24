@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { PageHero } from "@/components/layout/PageHero";
 import { ContactForm } from "@/components/forms/ContactForm";
+import { MapEmbed } from "@/components/ui/MapEmbed";
 import { Reveal } from "@/components/ui/Reveal";
 import { site } from "@/lib/site";
 import { breadcrumbSchema } from "@/lib/schema";
@@ -80,13 +81,7 @@ export default function ContactPage() {
             </div>
 
             <div className="relative h-72 overflow-hidden rounded-3xl border border-line/60">
-              <iframe
-                title={`Map to ${site.name}`}
-                src={mapSrc}
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="absolute inset-0 h-full w-full grayscale-[0.3]"
-              />
+              <MapEmbed title={`Map to ${site.name}`} src={mapSrc} />
             </div>
 
             <div>

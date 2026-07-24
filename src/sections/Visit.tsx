@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { MapEmbed } from "@/components/ui/MapEmbed";
 import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { site } from "@/lib/site";
@@ -44,11 +45,17 @@ export function Visit() {
                 </dl>
               </div>
 
-              <div className="flex flex-wrap gap-6">
-                <a href={`tel:${site.phone}`} className="ink-underline text-sm text-ink">
+              <div className="flex flex-wrap gap-4">
+                <a
+                  href={`tel:${site.phone}`}
+                  className="ink-underline inline-flex min-h-12 items-center py-2 text-sm text-ink"
+                >
                   {site.phoneDisplay}
                 </a>
-                <a href={`mailto:${site.email}`} className="ink-underline text-sm text-ink">
+                <a
+                  href={`mailto:${site.email}`}
+                  className="ink-underline inline-flex min-h-12 items-center py-2 text-sm text-ink"
+                >
                   {site.email}
                 </a>
               </div>
@@ -65,13 +72,7 @@ export function Visit() {
 
         <Reveal delay={1}>
           <div className="relative h-full min-h-[380px] overflow-hidden rounded-3xl border border-line/60">
-            <iframe
-              title={`Map to ${site.name}`}
-              src={mapSrc}
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              className="absolute inset-0 h-full w-full grayscale-[0.3] contrast-[1.05]"
-            />
+            <MapEmbed title={`Map to ${site.name}`} src={mapSrc} />
           </div>
         </Reveal>
       </div>

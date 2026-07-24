@@ -1,9 +1,9 @@
-import { Cormorant_Garamond, Manrope, Shippori_Mincho } from "next/font/google";
+import { Cormorant_Garamond, Manrope } from "next/font/google";
 
 /** Display serif — the cinematic, editorial voice of the brand. */
 export const serif = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["300", "400", "500"],
   variable: "--font-serif",
   display: "swap",
 });
@@ -11,15 +11,7 @@ export const serif = Cormorant_Garamond({
 /** Utility sans — kickers, nav, UI, body copy. */
 export const sans = Manrope({
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
+  weight: ["400", "500"],
   variable: "--font-sans",
-  display: "swap",
-});
-
-/** Japanese mincho for authentic vertical accents. */
-export const jp = Shippori_Mincho({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-jp",
   display: "swap",
 });
