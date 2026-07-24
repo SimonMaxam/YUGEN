@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { isTouchDevice } from "@/lib/device";
 import { Cursor } from "./Cursor";
 import { ControlDock } from "./ControlDock";
 import { Loader } from "./Loader";
@@ -29,7 +30,8 @@ export function ExperienceShell() {
     }
     setChecked(true);
 
-    // Kick ambience after first paint so it never blocks hero interactivity.
+    if (isTouchDevice()) return;
+
     const t = window.setTimeout(() => setAmbience(true), seen ? 400 : 2600);
     return () => clearTimeout(t);
   }, []);
@@ -38,7 +40,7 @@ export function ExperienceShell() {
     sessionStorage.setItem("yugen-entered", "1");
     document.body.style.overflow = "";
     setShowLoader(false);
-    setAmbience(true);
+    if (!isTouchDevice()) setAmbience(true);
   }
 
   return (

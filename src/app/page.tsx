@@ -3,7 +3,7 @@ import { Awards } from "@/sections/Awards";
 import { Story } from "@/sections/Story";
 import { Chef } from "@/sections/Chef";
 import { Signature } from "@/sections/Signature";
-import { Experience } from "@/sections/Experience";
+import { HomeExperience } from "@/sections/HomeExperience";
 import { GalleryPreview } from "@/sections/GalleryPreview";
 import { Testimonials } from "@/sections/Testimonials";
 import { Newsletter } from "@/sections/Newsletter";
@@ -19,7 +19,7 @@ export default function HomePage() {
       <KanjiMarquee />
       <Chef />
       <Signature />
-      <Experience />
+      <HomeExperience />
       <GalleryPreview />
       <Testimonials />
       <Newsletter />

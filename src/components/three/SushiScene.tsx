@@ -523,7 +523,7 @@ export default function SushiScene({
         height: "100%",
         pointerEvents: "none",
       }}
-      frameloop="always"
+      frameloop={lite ? "demand" : "always"}
       onCreated={({ gl }) => {
         gl.setClearColor(0x000000, 0);
         gl.domElement.style.pointerEvents = "none";

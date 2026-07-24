@@ -10,6 +10,8 @@ import {
   useTransform,
 } from "framer-motion";
 import { Magnetic } from "@/components/ui/Magnetic";
+import { HeroStillBackdrop } from "@/components/hero/HeroStillBackdrop";
+import { shouldAutoLoad3D } from "@/lib/device";
 import { site } from "@/lib/site";
 
 const SushiScene = dynamic(() => import("@/components/three/SushiScene"), {
@@ -25,7 +27,7 @@ const SushiScene = dynamic(() => import("@/components/three/SushiScene"), {
 export function Hero() {
   const ref = useRef<HTMLDivElement>(null);
   const progressRef = useRef(0);
-  const [mountScene, setMountScene] = useState(true);
+  const [mountScene, setMountScene] = useState(false);
   const [isTouch, setIsTouch] = useState(false);
   const [progressLabel, setProgressLabel] = useState(0);
 
@@ -34,14 +36,7 @@ export function Hero() {
       window.matchMedia("(pointer: coarse)").matches ||
       (navigator.maxTouchPoints > 0 && window.innerWidth < 900);
     setIsTouch(touch);
-
-    if (!touch) {
-      setMountScene(true);
-      return;
-    }
-    setMountScene(false);
-    const t = window.setTimeout(() => setMountScene(true), 400);
-    return () => window.clearTimeout(t);
+    setMountScene(shouldAutoLoad3D());
   }, []);
 
   useEffect(() => {
@@ -93,7 +88,11 @@ export function Hero() {
       <div className="sticky top-0 h-[100svh] min-h-[560px] w-full overflow-hidden">
         {/* WebGL sushi — never steals taps from the CTAs */}
         <div className="pointer-events-none absolute inset-0 z-0">
-          {mountScene && <SushiScene progressRef={progressRef} />}
+          {mountScene ? (
+            <SushiScene progressRef={progressRef} />
+          ) : (
+            <HeroStillBackdrop />
+          )}
         </div>
 
         <div

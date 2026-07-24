@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -10,6 +11,7 @@ import { HOTSPOTS } from "@/components/three/restaurant/config";
 import type { JoystickState } from "@/components/three/restaurant/WalkControls";
 import { SceneErrorBoundary } from "@/components/three/SceneErrorBoundary";
 import type { TimeOfDay } from "@/lib/time-of-day";
+import { isTouchDevice } from "@/lib/device";
 
 /**
  * The room always glows at golden hour — its warm light is the most inviting,
@@ -62,6 +64,7 @@ export function Experience() {
   const [inView, setInView] = useState(false);
   const [isTouch, setIsTouch] = useState(false);
   const [lowPower, setLowPower] = useState(false);
+  const [touchOptIn, setTouchOptIn] = useState(false);
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const joystick = useRef<JoystickState>({ x: 0, y: 0 });
@@ -69,15 +72,17 @@ export function Experience() {
 
   // Device capability sniffing (client-only).
   useEffect(() => {
-    const touch =
-      window.matchMedia("(pointer: coarse)").matches || "ontouchstart" in window;
+    const touch = isTouchDevice();
     const cores = navigator.hardwareConcurrency ?? 8;
     setIsTouch(touch);
     setLowPower(touch || cores <= 4 || window.innerWidth < 768);
   }, []);
 
-  // Mount the WebGL scene only once the section scrolls into view.
+  const webglActive = inView && (!isTouch || touchOptIn);
+
+  // Desktop: mount WebGL when the block scrolls into view. Mobile: opt-in only.
   useEffect(() => {
+    if (isTouch) return;
     const el = wrapRef.current;
     if (!el) return;
     const io = new IntersectionObserver(
@@ -91,7 +96,7 @@ export function Experience() {
     );
     io.observe(el);
     return () => io.disconnect();
-  }, []);
+  }, [isTouch]);
 
   // Press E near a seat (walk mode) to open its experience.
   useEffect(() => {
@@ -135,7 +140,7 @@ export function Experience() {
               mode === "walk" ? "touch-none overscroll-none select-none" : ""
             }`}
           >
-            {inView && (
+            {webglActive ? (
               <SceneErrorBoundary fallback={<SceneFallback />}>
                 <RestaurantScene
                   theme={SCENE_THEME}
@@ -148,11 +153,18 @@ export function Experience() {
                   onExit={() => setMode("orbit")}
                 />
               </SceneErrorBoundary>
-            )}
+            ) : isTouch ? (
+              <TouchExperienceFallback
+                onEnable={() => {
+                  setTouchOptIn(true);
+                  setInView(true);
+                }}
+              />
+            ) : null}
 
             {/* -------------------- Mode toggle -------------------- */}
             <div className="absolute right-4 top-4 z-20 md:right-6 md:top-6">
-              {mode === "orbit" ? (
+              {webglActive && mode === "orbit" ? (
                 <button
                   onClick={() => setMode("walk")}
                   className="glass flex min-h-12 items-center gap-2 rounded-full px-5 py-3 text-[0.64rem] uppercase tracking-wider2 text-ink transition-colors hover:text-accent"
@@ -160,7 +172,7 @@ export function Experience() {
                   <WalkIcon />
                   Walk inside
                 </button>
-              ) : (
+              ) : webglActive ? (
                 <button
                   onClick={() => setMode("orbit")}
                   className="glass flex min-h-12 items-center gap-2 rounded-full px-5 py-3 text-[0.64rem] uppercase tracking-wider2 text-ink transition-colors hover:text-accent"
@@ -168,11 +180,11 @@ export function Experience() {
                   <ExitIcon />
                   Exit ({isTouch ? "back" : "Esc"})
                 </button>
-              )}
+              ) : null}
             </div>
 
             {/* -------------------- Orbit hint --------------------- */}
-            {mode === "orbit" && (
+            {webglActive && mode === "orbit" && (
               <div className="pointer-events-none absolute left-4 top-4 z-10 flex flex-col gap-1 text-[0.6rem] uppercase tracking-wider2 text-ink/70 md:left-6 md:top-6">
                 <span>Drag · look around</span>
                 <span>Scroll · zoom</span>
@@ -181,7 +193,7 @@ export function Experience() {
             )}
 
             {/* -------------------- Walk overlay ------------------- */}
-            {mode === "walk" && (
+            {webglActive && mode === "walk" && (
               <>
                 {/* reticle */}
                 <div className="pointer-events-none absolute left-1/2 top-1/2 z-10 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/70 mix-blend-difference" />
@@ -288,6 +300,42 @@ export function Experience() {
         )}
       </AnimatePresence>
     </section>
+  );
+}
+
+/* --------------------------- Mobile 3D opt-in --------------------------- */
+
+function TouchExperienceFallback({ onEnable }: { onEnable: () => void }) {
+  return (
+    <div className="relative h-full w-full">
+      <Image
+        src="/images/gallery-room.jpg"
+        alt="The YŪGEN dining room"
+        fill
+        sizes="100vw"
+        className="object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-bg via-bg/55 to-bg/25" />
+      <div className="absolute inset-0 flex flex-col items-center justify-end gap-4 p-8 pb-12 text-center">
+        <p className="max-w-xs text-sm leading-relaxed text-muted">
+          The interactive 3D room is optional on mobile — it keeps scrolling fast and saves battery.
+        </p>
+        <button
+          type="button"
+          onClick={onEnable}
+          className="min-h-12 rounded-full bg-accent px-8 py-3 text-[0.68rem] uppercase tracking-wider2 text-bg transition-all duration-500 hover:brightness-110"
+        >
+          Load 3D tour
+        </button>
+        <Link
+          href="/gallery"
+          prefetch={false}
+          className="text-[0.65rem] uppercase tracking-wider2 text-ink underline-offset-4 hover:text-accent hover:underline"
+        >
+          View photos instead
+        </Link>
+      </div>
+    </div>
   );
 }
 

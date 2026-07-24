@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAudio } from "@/components/providers/AudioProvider";
+import { isTouchDevice } from "@/lib/device";
 import { site } from "@/lib/site";
 
 /**
@@ -20,7 +21,7 @@ export function Loader({ onDone }: { onDone: () => void }) {
   useEffect(() => {
     const t1 = setTimeout(() => setStage(1), 200);
     const t2 = setTimeout(() => setStage(2), 900);
-    const auto = setTimeout(() => leave(), 2500);
+    const auto = setTimeout(() => leave(), isTouchDevice() ? 1400 : 2500);
     return () => [t1, t2, auto].forEach(clearTimeout);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
