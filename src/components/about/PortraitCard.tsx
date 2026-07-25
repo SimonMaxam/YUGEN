@@ -51,14 +51,19 @@ export function PortraitCard() {
       />
       <div className="relative overflow-hidden rounded-[1.6rem] border border-line/70 bg-surface/60 shadow-2xl shadow-black/30">
         <div className="relative aspect-[3/4] w-full">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/images/simon-maxam.png"
-            alt="Simon Maxam, designer and developer, in Calgary"
-            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-            loading="lazy"
-            decoding="async"
-          />
+          <picture>
+            <source srcSet="/images/simon-maxam.webp" type="image/webp" />
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/simon-maxam-fallback.jpg"
+              alt="Simon Maxam, designer and developer, in Calgary"
+              width={900}
+              height={1200}
+              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+              loading="lazy"
+              decoding="async"
+            />
+          </picture>
           <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_120%_at_50%_0%,transparent_55%,rgba(0,0,0,0.45))]" />
           <span className="pointer-events-none absolute bottom-4 right-5 font-jp text-5xl text-white/25">
             作

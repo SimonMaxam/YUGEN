@@ -23,7 +23,7 @@ export function Footer() {
                     href={v}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-[0.7rem] uppercase tracking-wider2 text-muted transition-colors hover:text-accent"
+                    className="inline-flex min-h-12 items-center px-3 py-2 text-[0.7rem] uppercase tracking-wider2 text-muted transition-colors hover:text-accent"
                   >
                     {k}
                   </a>
@@ -34,13 +34,13 @@ export function Footer() {
 
           <Reveal delay={1}>
             <div>
-              <h2 className="kicker mb-5">Explore</h2>
+              <p className="kicker mb-5">Explore</p>
               <ul className="flex flex-col gap-3">
                 {navLinks.map((l) => (
                   <li key={l.href}>
                     <Link
                       href={l.href}
-                      className="text-sm text-muted transition-colors hover:text-ink"
+                      className="inline-flex min-h-12 items-center py-1 text-sm text-muted transition-colors hover:text-ink"
                     >
                       {l.label}
                     </Link>
@@ -52,19 +52,19 @@ export function Footer() {
 
           <Reveal delay={2}>
             <div>
-              <h2 className="kicker mb-5">Visit</h2>
+              <p className="kicker mb-5">Visit</p>
               <address className="flex flex-col gap-3 not-italic text-sm text-muted">
                 <span>
                   {site.address.street}
                   <br />
                   {site.address.district}, {site.address.city} {site.address.region}
                 </span>
-                <a href={`tel:${site.phone}`} className="transition-colors hover:text-ink">
+                <a href={`tel:${site.phone}`} className="inline-flex min-h-12 items-center py-1 transition-colors hover:text-ink">
                   {site.phoneDisplay}
                 </a>
                 <a
                   href={`mailto:${site.email}`}
-                  className="transition-colors hover:text-ink"
+                  className="inline-flex min-h-12 items-center py-1 transition-colors hover:text-ink"
                 >
                   {site.email}
                 </a>
@@ -80,7 +80,7 @@ export function Footer() {
 
           <Link
             href="/about"
-            className="group inline-flex items-center gap-2 transition-colors hover:text-ink"
+            className="group inline-flex min-h-12 items-center gap-3 py-2 transition-colors hover:text-ink"
             aria-label="About the developer, Simon Maxam"
           >
             <span>Designed &amp; built by</span>

@@ -80,7 +80,7 @@ export function Nav() {
           <Link
             href="/reservations"
             prefetch={false}
-            className="inline-flex min-h-11 items-center justify-self-end rounded-full border border-ink/20 bg-elevated/40 px-4 py-2.5 text-[0.62rem] uppercase tracking-wider2 text-ink backdrop-blur-sm transition-all duration-500 hover:border-accent hover:text-accent lg:min-h-12 lg:px-5 lg:py-3 lg:text-[0.68rem]"
+            className="inline-flex min-h-12 items-center justify-self-end rounded-full border border-ink/20 bg-elevated/40 px-4 py-3 text-[0.62rem] uppercase tracking-wider2 text-ink backdrop-blur-sm transition-all duration-500 hover:border-accent hover:text-accent lg:px-5 lg:text-[0.68rem]"
           >
             Reserve
           </Link>

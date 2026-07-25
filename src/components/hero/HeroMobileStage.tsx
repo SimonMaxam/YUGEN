@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { useDeviceTiltRef, useGyroPermissionPrompt } from "@/lib/useDeviceTilt";
+import { imageSources } from "@/lib/media";
 
 /**
  * Phone hero — real dish photography + gyro parallax (no WebGL).
@@ -58,28 +58,27 @@ export function HeroMobileStage({ scrollProgress = 0 }: { scrollProgress?: numbe
 
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-      {/* Soft cinematic plate — readable, not muddy */}
       <div ref={backRef} className="absolute inset-0 will-change-transform">
-        <Image
+        <ResponsiveImg
           src="/images/counter-dusk.jpg"
           alt=""
-          fill
-          priority
           sizes="100vw"
-          className="object-cover object-[center_35%] opacity-50"
+          className="absolute inset-0 h-full w-full object-cover object-[center_35%] opacity-50"
+          width={1400}
+          height={933}
+          priority
         />
         <div className="absolute inset-0 bg-bg/55" />
         <div className="absolute inset-0 bg-gradient-to-b from-bg/10 via-transparent to-bg/95" />
       </div>
 
-      {/* Hero plate — center top */}
       <div
         ref={heroRef}
-        className="absolute left-1/2 top-[7%] z-[3] w-[46vw] max-w-[200px] -translate-x-1/2 will-change-transform"
+        className="absolute left-1/2 top-[7%] z-[3] w-[40vw] max-w-[168px] -translate-x-1/2 will-change-transform"
       >
         <FoodFrame
           src="/images/dish-kintsugi.jpg"
-          alt=""
+          alt="Bluefin toro nigiri with gold leaf"
           priority
           className="aspect-[4/5]"
         />
@@ -87,16 +86,24 @@ export function HeroMobileStage({ scrollProgress = 0 }: { scrollProgress?: numbe
 
       <div
         ref={leftRef}
-        className="absolute left-[4%] top-[22%] z-[2] w-[30vw] max-w-[120px] will-change-transform"
+        className="absolute left-[4%] top-[22%] z-[2] w-[28vw] max-w-[108px] will-change-transform"
       >
-        <FoodFrame src="/images/dish-uni.jpg" alt="" className="aspect-square" />
+        <FoodFrame
+          src="/images/dish-uni.jpg"
+          alt="Hokkaido uni gunkan on nori"
+          className="aspect-square"
+        />
       </div>
 
       <div
         ref={rightRef}
-        className="absolute right-[3%] top-[18%] z-[2] w-[32vw] max-w-[128px] will-change-transform"
+        className="absolute right-[3%] top-[18%] z-[2] w-[30vw] max-w-[112px] will-change-transform"
       >
-        <FoodFrame src="/images/salmon-belly.jpg" alt="" className="aspect-[4/5]" />
+        <FoodFrame
+          src="/images/salmon-belly.jpg"
+          alt="Aged salmon belly nigiri"
+          className="aspect-[4/5]"
+        />
       </div>
 
       {gyroHint && (
@@ -121,18 +128,53 @@ function FoodFrame({
 }) {
   return (
     <div
-      className={`overflow-hidden rounded-2xl shadow-[0_18px_40px_rgba(0,0,0,0.45)] ring-1 ring-white/20 relative ${className}`}
+      className={`relative overflow-hidden rounded-2xl shadow-[0_18px_40px_rgba(0,0,0,0.45)] ring-1 ring-white/20 ${className}`}
     >
-      <Image
+      <ResponsiveImg
         src={src}
         alt={alt}
         width={400}
         height={500}
+        sizes="28vw"
         priority={priority}
-        sizes="30vw"
         className="h-full w-full object-cover"
       />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-white/10" />
     </div>
+  );
+}
+
+function ResponsiveImg({
+  src,
+  alt,
+  width,
+  height,
+  sizes,
+  className,
+  priority,
+}: {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  sizes: string;
+  className?: string;
+  priority?: boolean;
+}) {
+  const { fallback, webp } = imageSources(src);
+  return (
+    <picture>
+      <source srcSet={webp} type="image/webp" sizes={sizes} />
+      <img
+        src={fallback}
+        alt={alt}
+        width={width}
+        height={height}
+        sizes={sizes}
+        loading={priority ? "eager" : "lazy"}
+        decoding="async"
+        className={className}
+      />
+    </picture>
   );
 }

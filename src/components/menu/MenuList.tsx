@@ -176,7 +176,7 @@ function Chip({
     <button
       onClick={onClick}
       className={cn(
-        "shrink-0 whitespace-nowrap rounded-full border px-4 py-2 text-[0.68rem] uppercase tracking-wider2 transition-all duration-300",
+        "shrink-0 min-h-12 whitespace-nowrap rounded-full border px-5 py-3 text-[0.68rem] uppercase tracking-wider2 transition-all duration-300",
         active
           ? "border-accent bg-accent text-bg"
           : "border-line text-muted hover:border-accent hover:text-accent",

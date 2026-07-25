@@ -24,7 +24,7 @@ export function GalleryPreview() {
         <Reveal>
           <Link
             href="/gallery"
-            className="ink-underline whitespace-nowrap text-[0.72rem] uppercase tracking-wider2 text-ink"
+            className="ink-underline inline-flex min-h-12 items-center whitespace-nowrap py-2 text-[0.72rem] uppercase tracking-wider2 text-ink"
           >
             Full gallery →
           </Link>

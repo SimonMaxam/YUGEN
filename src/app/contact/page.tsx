@@ -49,19 +49,19 @@ export default function ContactPage() {
           <div className="flex flex-col gap-8">
             <div className="grid grid-cols-2 gap-6">
               <div>
-                <h2 className="kicker mb-2">Call</h2>
+                <p className="kicker mb-2">Call</p>
                 <a href={`tel:${site.phone}`} className="text-lg text-ink hover:text-accent">
                   {site.phoneDisplay}
                 </a>
               </div>
               <div>
-                <h2 className="kicker mb-2">Email</h2>
+                <p className="kicker mb-2">Email</p>
                 <a href={`mailto:${site.email}`} className="text-lg text-ink hover:text-accent">
                   {site.email}
                 </a>
               </div>
               <div>
-                <h2 className="kicker mb-2">Visit</h2>
+                <p className="kicker mb-2">Visit</p>
                 <address className="not-italic text-sm text-muted">
                   {site.address.street}
                   <br />
@@ -69,7 +69,7 @@ export default function ContactPage() {
                 </address>
               </div>
               <div>
-                <h2 className="kicker mb-2">Follow</h2>
+                <p className="kicker mb-2">Follow</p>
                 <div className="flex flex-col gap-1">
                   {Object.entries(site.social).map(([k, v]) => (
                     <a key={k} href={v} target="_blank" rel="noopener noreferrer" className="text-sm text-muted capitalize hover:text-accent">
@@ -85,7 +85,7 @@ export default function ContactPage() {
             </div>
 
             <div>
-              <h2 className="kicker mb-3">Hours</h2>
+              <p className="kicker mb-3">Hours</p>
               <dl className="flex flex-col gap-2">
                 {site.hours.map((h) => (
                   <div key={h.day} className="flex justify-between gap-6 border-b border-line/50 pb-2 text-sm">

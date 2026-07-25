@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Photo } from "@/components/ui/Photo";
+import { imageSources } from "@/lib/media";
 
 interface Shot {
   img: string;
@@ -64,12 +65,13 @@ export function GalleryGrid() {
 
   return (
     <div className="mx-auto max-w-[1400px] px-5 pb-28 md:px-10">
-      <div className="scrollbar-none mb-10 flex gap-2 overflow-x-auto">
+      <div className="scrollbar-none mb-10 flex gap-3 overflow-x-auto pb-1">
         {categories.map((c) => (
           <button
             key={c}
+            type="button"
             onClick={() => setFilter(c)}
-            className={`shrink-0 rounded-full border px-4 py-2 text-[0.68rem] uppercase tracking-wider2 transition-all duration-300 ${
+            className={`shrink-0 min-h-12 rounded-full border px-5 py-3 text-[0.68rem] uppercase tracking-wider2 transition-all duration-300 ${
               filter === c
                 ? "border-accent bg-accent text-bg"
                 : "border-line text-muted hover:border-accent hover:text-accent"
@@ -147,11 +149,20 @@ export function GalleryGrid() {
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               className="relative z-[1] flex max-h-[85vh] w-full max-w-3xl flex-col items-center"
             >
-              <img
-                src={shots[open].img}
-                alt={shots[open].alt}
-                className="max-h-[78vh] w-auto rounded-2xl object-contain"
-              />
+              <picture>
+                <source
+                  srcSet={imageSources(shots[open].img).webp}
+                  type="image/webp"
+                />
+                <img
+                  src={shots[open].img}
+                  alt={shots[open].alt}
+                  width={1200}
+                  height={1500}
+                  decoding="async"
+                  className="max-h-[78vh] w-auto rounded-2xl object-contain"
+                />
+              </picture>
               <figcaption className="mt-4 text-center text-sm text-muted">
                 {shots[open].caption}
               </figcaption>
