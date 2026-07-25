@@ -63,6 +63,9 @@ export const metadata: Metadata = {
   },
   manifest: "/manifest.webmanifest",
   category: "restaurant",
+  verification: {
+    google: "mqj9a5W8wU9vmMQTjup0uNEZVq39eLI9EhQR-P5noFQ",
+  },
 };
 
 export const viewport: Viewport = {
