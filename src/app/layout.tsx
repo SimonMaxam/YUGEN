@@ -8,6 +8,7 @@ import { Nav } from "@/components/layout/Nav";
 import { MobileBottomBar } from "@/components/layout/MobileBottomBar";
 import { Footer } from "@/components/layout/Footer";
 import { ExperienceShell } from "@/components/experience/ExperienceShell";
+import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
@@ -123,6 +124,7 @@ export default function RootLayout({
           <Footer />
           <ExperienceShell />
         </Providers>
+        <GoogleAnalytics />
       </body>
     </html>
   );
