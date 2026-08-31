@@ -95,9 +95,9 @@ const certificateGroups: {
     label: "Marketing & AI Ads",
     jp: "広告",
     items: [
-      { name: "AI-Powered Performance Ads", issuer: "Google · issued to Sina Khalili", src: "/images/about/certificates/ai-powered-performance-ads.png" },
-      { name: "Google Ads Search Professional", issuer: "Google · issued to Sina Khalili", src: "/images/about/certificates/google-ads-search.png" },
-      { name: "AI Foundations: Machine Learning", issuer: "LinkedIn Learning · issued to Sina Khalili", src: "/images/about/certificates/ai-foundations-ml-google.png" },
+      { name: "AI-Powered Performance Ads", issuer: "Google · issued to Simon Maxam (Sina Khalili)", src: "/images/about/certificates/ai-powered-performance-ads.png" },
+      { name: "Google Ads Search Professional", issuer: "Google · issued to Simon Maxam (Sina Khalili)", src: "/images/about/certificates/google-ads-search.png" },
+      { name: "AI Foundations: Machine Learning", issuer: "LinkedIn Learning · issued to Simon Maxam (Sina Khalili)", src: "/images/about/certificates/ai-foundations-ml-google.png" },
     ],
   },
 ];
