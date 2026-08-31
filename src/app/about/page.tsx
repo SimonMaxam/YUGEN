@@ -91,6 +91,15 @@ const certificateGroups: {
       { name: "Solution Sales", issuer: "LinkedIn Learning", src: "/images/about/certificates/solution-sales.png" },
     ],
   },
+  {
+    label: "Marketing & AI Ads",
+    jp: "広告",
+    items: [
+      { name: "AI-Powered Performance Ads", issuer: "Google · issued to Sina Khalili", src: "/images/about/certificates/ai-powered-performance-ads.png" },
+      { name: "Google Ads Search Professional", issuer: "Google · issued to Sina Khalili", src: "/images/about/certificates/google-ads-search.png" },
+      { name: "AI Foundations: Machine Learning", issuer: "LinkedIn Learning · issued to Sina Khalili", src: "/images/about/certificates/ai-foundations-ml-google.png" },
+    ],
+  },
 ];
 
 function personSchema() {
@@ -359,6 +368,12 @@ export default function AboutPage() {
               Coursework completed across 3D, architecture, code and creative
               tools — mostly LinkedIn Learning, with a few from Adobe and
               Microsoft along the way.
+            </p>
+          </Reveal>
+          <Reveal delay={1}>
+            <p className="mt-3 max-w-2xl text-sm italic leading-relaxed text-faint">
+              A few credentials below are issued under my legal name, Sina
+              Khalili — Simon Maxam is my preferred, professional name.
             </p>
           </Reveal>
 
