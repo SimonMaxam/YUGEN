@@ -1,0 +1,21 @@
+Simon asset bundle — generated placeholders for /models and /audio
+
+models/
+  dragon_roll.glb
+  chef.glb
+  nigiri.glb
+  salmon_nigiri.glb
+  tuna_nigiri.glb
+  maki_roll.glb
+  gunkan_uni.glb
+  chopsticks.glb
+  serving_plate.glb
+  sake_bottle.glb
+  dining_table.glb
+  room_props.glb
+
+audio/
+  restaurant_ambient.mp3   → /audio/restaurant_ambient.mp3
+  ambient.mp3            → /audio/ambient.mp3 (main YŪGEN AudioProvider)
+
+Regenerate: npm run generate-simon-assets && npm run generate-simon-audio

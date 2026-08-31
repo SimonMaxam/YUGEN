@@ -9,7 +9,10 @@
     "start": "next start",
     "lint": "next lint",
     "preview": "npx serve out",
-    "optimize-images": "node scripts/optimize-images.mjs"
+    "optimize-images": "node scripts/optimize-images.mjs",
+    "generate-simon-assets": "node scripts/generate-simon-assets.mjs",
+    "generate-simon-audio": "node scripts/generate-simon-audio.mjs",
+    "generate-simon": "npm run generate-simon-assets && npm run generate-simon-audio"
   },
   "engines": {
     "node": ">=18.18.0"
@@ -33,6 +36,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@types/node": "^26.1.1",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
