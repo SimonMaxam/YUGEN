@@ -61,6 +61,25 @@
   --shadow-color: 0 0 0;
 }
 
+/* The developer page ("maker" look): its own violet + cyan palette, independent of the
+   restaurant's time-of-day theme, so /about reads as a different place from YŪGEN. */
+.maker-theme {
+  --c-bg: 9 8 18;
+  --c-surface: 18 16 32;
+  --c-elevated: 28 25 48;
+  --c-ink: 242 240 252;
+  --c-muted: 176 172 200;
+  --c-faint: 120 116 148;
+  --c-line: 48 44 76;
+  --c-accent: 139 92 246;
+  --c-accent-soft: 176 148 252;
+  --c-gold: 34 211 238;
+  --glow: 70 40 140;
+  --shadow-color: 0 0 0;
+  background-color: rgb(var(--c-bg));
+  color: rgb(var(--c-ink));
+}
+
 * {
   border-color: rgb(var(--c-line));
 }

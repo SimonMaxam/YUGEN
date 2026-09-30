@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { PageHero } from "@/components/layout/PageHero";
+import { DevHero } from "@/components/about/DevHero";
 import { Reveal } from "@/components/ui/Reveal";
 import { PortraitCard } from "@/components/about/PortraitCard";
 import { CertificatesShowcase } from "@/components/about/CertificatesShowcase";
@@ -127,7 +127,7 @@ function personSchema() {
 
 export default function AboutPage() {
   return (
-    <>
+    <div className="maker-theme">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema()) }}
@@ -144,16 +144,7 @@ export default function AboutPage() {
         }}
       />
 
-      <PageHero
-        kicker="The maker"
-        jp="作り手"
-        title="Simon Maxam"
-        lede="Designer & developer in Calgary, Alberta — crafting immersive digital experiences where design, technology and storytelling meet."
-        crumbs={[
-          { name: "Home", href: "/" },
-          { name: "About the Developer", href: "/about" },
-        ]}
-      />
+      <DevHero />
 
       <div className="mx-auto max-w-[1400px] px-5 pb-24 md:px-10 md:pb-36">
         {/* Portrait + bio */}
@@ -434,6 +425,6 @@ export default function AboutPage() {
           </div>
         </Reveal>
       </div>
-    </>
+    </div>
   );
 }
