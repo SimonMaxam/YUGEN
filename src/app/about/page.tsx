@@ -3,6 +3,9 @@ import Link from "next/link";
 import { PageHero } from "@/components/layout/PageHero";
 import { Reveal } from "@/components/ui/Reveal";
 import { PortraitCard } from "@/components/about/PortraitCard";
+import { CertificatesShowcase } from "@/components/about/CertificatesShowcase";
+import { TiltCard } from "@/components/ui/TiltCard";
+import { certificates } from "@/lib/certificates";
 import { site } from "@/lib/site";
 import { breadcrumbSchema } from "@/lib/schema";
 
@@ -44,62 +47,37 @@ const skillGroups: { label: string; jp: string; items: string[] }[] = [
   },
 ];
 
-const certificateGroups: {
-  label: string;
-  jp: string;
-  items: { name: string; issuer: string; src: string }[];
-}[] = [
+const focus: { title: string; body: string; tools: string; color: string }[] = [
   {
-    label: "3D & Design",
-    jp: "造形",
-    items: [
-      { name: "Revit to Unreal", issuer: "LinkedIn Learning", src: "/images/about/certificates/revit-to-unreal.png" },
-      { name: "Revit MEP", issuer: "LinkedIn Learning", src: "/images/about/certificates/revit-2023-mep.png" },
-      { name: "Unreal Lighting", issuer: "LinkedIn Learning", src: "/images/about/certificates/unreal-lighting.png" },
-      { name: "Blender", issuer: "LinkedIn Learning", src: "/images/about/certificates/blender-4.png" },
-      { name: "Illustrator", issuer: "LinkedIn Learning · Adobe", src: "/images/about/certificates/adobe-illustrator.png" },
-      { name: "Photoshop", issuer: "LinkedIn Learning · Adobe", src: "/images/about/certificates/adobe-photoshop.png" },
-      { name: "Premiere Pro", issuer: "LinkedIn Learning · Adobe", src: "/images/about/certificates/adobe-premiere.png" },
-    ],
+    title: "Web & apps",
+    body: "Immersive websites and web apps that feel like experiences, not pages.",
+    tools: "Next.js · React · Three.js · TypeScript",
+    color: "#8b5cf6",
   },
   {
-    label: "Development",
-    jp: "開発",
-    items: [
-      { name: "Web Development", issuer: "LinkedIn Learning", src: "/images/about/certificates/html-css-js.png" },
-      { name: "C++", issuer: "LinkedIn Learning", src: "/images/about/certificates/cpp-advanced.png" },
-    ],
+    title: "3D & visualisation",
+    body: "Real-time 3D rooms, products and worlds, like the walkable YŪGEN dining room.",
+    tools: "Blender · Unreal Engine 5 · Revit",
+    color: "#22d3ee",
   },
   {
-    label: "Data & AI",
-    jp: "情報",
-    items: [
-      { name: "Machine Learning", issuer: "LinkedIn Learning", src: "/images/about/certificates/ai-foundations-ml.png" },
-      { name: "AI Cybersecurity", issuer: "LinkedIn Learning", src: "/images/about/certificates/ai-agents-cybersecurity.png" },
-      { name: "Prompt Engineering", issuer: "LinkedIn Learning", src: "/images/about/certificates/prompt-engineering.png" },
-      { name: "Data Analysis", issuer: "LinkedIn Learning · Microsoft", src: "/images/about/certificates/data-analysis-microsoft.png" },
-      { name: "Data Analytics", issuer: "LinkedIn Learning · IIBA", src: "/images/about/certificates/data-analytics-business.png" },
-      { name: "Python for Finance", issuer: "LinkedIn Learning", src: "/images/about/certificates/python-finance.png" },
-    ],
+    title: "Design",
+    body: "Visual identity, interface and motion, from first sketch to shipped page.",
+    tools: "Photoshop · Illustrator · UI / UX",
+    color: "#f59e0b",
   },
   {
-    label: "Business",
-    jp: "経営",
-    items: [
-      { name: "SEO", issuer: "LinkedIn Learning", src: "/images/about/certificates/advanced-seo.png" },
-      { name: "Project Management", issuer: "LinkedIn Learning · PMI", src: "/images/about/certificates/project-management.png" },
-      { name: "Solution Sales", issuer: "LinkedIn Learning", src: "/images/about/certificates/solution-sales.png" },
-    ],
+    title: "Cloud & AI",
+    body: "Certified in cloud architecture, data and deep learning by AWS, Google and IBM.",
+    tools: "AWS · Python · PyTorch · LangChain",
+    color: "#34d399",
   },
-  {
-    label: "Marketing & AI Ads",
-    jp: "広告",
-    items: [
-      { name: "AI-Powered Performance Ads", issuer: "Google · issued to Simon Maxam (Sina Khalili)", src: "/images/about/certificates/ai-powered-performance-ads.png" },
-      { name: "Google Ads Search Professional", issuer: "Google · issued to Simon Maxam (Sina Khalili)", src: "/images/about/certificates/google-ads-search.png" },
-      { name: "AI Foundations: Machine Learning", issuer: "LinkedIn Learning · issued to Simon Maxam (Sina Khalili)", src: "/images/about/certificates/ai-foundations-ml-google.png" },
-    ],
-  },
+];
+
+const profiles = [
+  { label: "GitHub", href: "https://github.com/wolliom" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/in/simonmaxam/" },
+  { label: "Instagram", href: "https://www.instagram.com/simonmaxam/" },
 ];
 
 function personSchema() {
@@ -107,8 +85,22 @@ function personSchema() {
     "@context": "https://schema.org",
     "@type": "Person",
     name: "Simon Maxam",
-    jobTitle: "Designer & Developer",
+    givenName: "Simon",
+    familyName: "Maxam",
+    jobTitle: "Web Developer, 3D Artist and Designer",
     url: `${site.url}/about`,
+    sameAs: profiles.map((x) => x.href),
+    hasCredential: certificates.map((c) => {
+      const v = c.blurb.match(/coursera\.org\/verify\/\S+/);
+      return {
+        "@type": "EducationalOccupationalCredential",
+        name: c.title,
+        credentialCategory:
+          c.kind === "professional-certificate" ? "Professional Certificate" : "Certificate",
+        recognizedBy: { "@type": "Organization", name: c.issuer.split(" · ")[0] },
+        ...(v ? { url: `https://${v[0].replace(/[.)]+$/, "")}` } : {}),
+      };
+    }),
     image: `${site.url}/images/simon-maxam.png`,
     address: {
       "@type": "PostalAddress",
@@ -118,10 +110,17 @@ function personSchema() {
     },
     knowsAbout: [
       "Web Design",
+      "Web Development",
       "3D Visualization",
       "Interactive Experiences",
       "Three.js",
+      "Next.js",
       "UI/UX Design",
+      "Cloud Architecture on AWS",
+      "Python",
+      "Deep Learning",
+      "Generative AI",
+      "Guitar",
     ],
   };
 }
@@ -186,9 +185,61 @@ export default function AboutPage() {
                 visual identity and interface to the animations and the responsive,
                 performant experience.
               </p>
+              <dl className="grid grid-cols-2 gap-6 border-t border-line/60 pt-6 sm:grid-cols-4">
+                {[
+                  { k: "Based in", v: "Calgary" },
+                  { k: "Guitar", v: "7 yrs" },
+                  { k: "Performed", v: "300+ hrs" },
+                  { k: "Certificates", v: `${certificates.length}` },
+                ].map((x) => (
+                  <div key={x.k}>
+                    <dt className="text-[0.62rem] uppercase tracking-wider2 text-faint">{x.k}</dt>
+                    <dd className="mt-1 font-serif text-3xl text-ink">{x.v}</dd>
+                  </div>
+                ))}
+              </dl>
+              <div className="flex flex-wrap items-center gap-3">
+                {profiles.map((l) => (
+                  <a
+                    key={l.label}
+                    href={l.href}
+                    target="_blank"
+                    rel="me noopener noreferrer"
+                    className="rounded-full border border-line px-5 py-2.5 text-[0.68rem] uppercase tracking-wider2 text-ink transition-colors hover:border-accent hover:text-accent"
+                  >
+                    {l.label} ↗
+                  </a>
+                ))}
+              </div>
             </div>
           </Reveal>
         </div>
+
+        {/* What I do */}
+        <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {focus.map((f, i) => (
+            <Reveal key={f.title} delay={(i % 4) + 1}>
+              <TiltCard
+                glow={f.color}
+                max={9}
+                className="h-full rounded-2xl border bg-surface/40 p-5 backdrop-blur-sm"
+                style={{ borderColor: `${f.color}44` }}
+              >
+                <h2 className="font-serif text-xl text-ink">{f.title}</h2>
+                <p className="mt-2 text-sm leading-snug text-muted">{f.body}</p>
+                <p className="mt-4 text-[0.6rem] uppercase tracking-wider2" style={{ color: f.color }}>
+                  {f.tools}
+                </p>
+              </TiltCard>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+
+      {/* Credentials sit right under the intro, not at the bottom of the page */}
+      <CertificatesShowcase />
+
+      <div className="mx-auto max-w-[1400px] px-5 pb-24 md:px-10 md:pb-36">
 
         {/* Toolkit */}
         <section aria-label="Skills and tools" className="mt-24 md:mt-32">
@@ -350,71 +401,6 @@ export default function AboutPage() {
                   </span>
                 </div>
               </Reveal>
-            ))}
-          </div>
-        </section>
-
-        {/* Certificates */}
-        <section aria-label="Certificates" className="mt-24 md:mt-32">
-          <Reveal>
-            <div className="flex items-center gap-3">
-              <span className="h-px w-8 bg-accent/60" />
-              <span className="kicker">Always learning</span>
-              <span className="font-jp text-sm text-muted">資格</span>
-            </div>
-          </Reveal>
-          <Reveal delay={1}>
-            <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted md:text-lg">
-              Coursework completed across 3D, architecture, code and creative
-              tools — mostly LinkedIn Learning, with a few from Adobe and
-              Microsoft along the way.
-            </p>
-          </Reveal>
-          <Reveal delay={1}>
-            <p className="mt-3 max-w-2xl text-sm italic leading-relaxed text-faint">
-              A few credentials below are issued under my legal name, Sina
-              Khalili — Simon Maxam is my preferred, professional name.
-            </p>
-          </Reveal>
-
-          <div className="mt-12 flex flex-col gap-14">
-            {certificateGroups.map((group, gi) => (
-              <div key={group.label}>
-                <Reveal delay={gi}>
-                  <h3 className="flex items-baseline gap-2 font-serif text-xl text-ink">
-                    {group.label}
-                    <span className="font-jp text-sm text-faint">{group.jp}</span>
-                  </h3>
-                </Reveal>
-                <div className="mt-5 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-                  {group.items.map((cert, ci) => (
-                    <Reveal key={cert.name} delay={((gi + ci) % 3) + 1}>
-                      <div className="group relative overflow-hidden rounded-xl border border-line/70 bg-surface/50 transition-all duration-500 hover:-translate-y-0.5 hover:border-accent/60">
-                        <div className="relative aspect-[4/3] w-full overflow-hidden bg-white">
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img
-                            src={cert.src}
-                            alt={`${cert.name} certificate`}
-                            width={640}
-                            height={480}
-                            loading="lazy"
-                            decoding="async"
-                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-                          />
-                        </div>
-                        <div className="px-3 py-2.5">
-                          <p className="text-xs font-medium leading-snug text-ink">
-                            {cert.name}
-                          </p>
-                          <p className="mt-0.5 text-[0.65rem] uppercase tracking-wider2 text-faint">
-                            {cert.issuer}
-                          </p>
-                        </div>
-                      </div>
-                    </Reveal>
-                  ))}
-                </div>
-              </div>
             ))}
           </div>
         </section>
