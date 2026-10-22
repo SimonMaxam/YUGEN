@@ -375,45 +375,6 @@ export function CertificatesShowcase() {
           lede="Simon Maxam's verified credentials from Google, Amazon Web Services, IBM, Microsoft, Adobe, GitHub, Siemens, Autodesk and the University of London. Tap any card to open the certificate and check it yourself."
         />
 
-        <Reveal delay={1}>
-          <dl className="mt-8 grid grid-cols-3 gap-4 border-y border-line/60 py-6 md:max-w-xl">
-            {[
-              { k: "Certificates", v: `${certificates.length}` },
-              { k: "Professional programs", v: `${programs.length}` },
-              { k: "Issuers", v: `${wall.length}` },
-            ].map((x) => (
-              <div key={x.k}>
-                <dt className="text-[0.6rem] uppercase tracking-wider2 text-faint">{x.k}</dt>
-                <dd className="mt-1 font-serif text-3xl text-ink md:text-4xl">{x.v}</dd>
-              </div>
-            ))}
-          </dl>
-        </Reveal>
-
-        {/* Issuer logo wall: the big names, at a glance */}
-        <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-          {wall.slice(0, 10).map((w, i) => (
-            <Reveal key={w.brand} delay={i % 5}>
-              <TiltCard
-                glow={BRAND[w.brand].color}
-                max={12}
-                className="flex h-20 items-center justify-between gap-3 rounded-2xl border bg-surface/40 px-4 backdrop-blur-sm"
-                style={{ borderColor: `${BRAND[w.brand].color}44` }}
-              >
-                <div className="origin-left scale-[0.8]">
-                  <BrandLogo brand={w.brand} />
-                </div>
-                <span
-                  className="rounded-full px-2 py-0.5 text-[0.6rem] font-semibold"
-                  style={{ background: `${BRAND[w.brand].color}22`, color: BRAND[w.brand].color }}
-                >
-                  {w.n}
-                </span>
-              </TiltCard>
-            </Reveal>
-          ))}
-        </div>
-
         {/* PROFESSIONAL CERTIFICATES — the multi-course programs, in their own box.
             Neutral outer shell; each card carries its own issuer's colour and logo
             so they read as distinct, premium credentials rather than one flat block. */}
@@ -487,38 +448,75 @@ export function CertificatesShowcase() {
           </div>
         )}
 
-        <div className="mt-12 flex flex-col gap-12">
-          {topBrands.map((b) => renderGroup(b, top[b]))}
+        {/* Everything else stays hidden until asked for. */}
+        <div className="mt-10 flex justify-center">
+          <button
+            type="button"
+            onClick={() => setShowAll((s) => !s)}
+            aria-expanded={showAll}
+            className="flex items-center gap-3 rounded-full border border-ink/30 bg-ink px-6 py-3 text-xs font-semibold uppercase tracking-wider2 text-bg transition-transform hover:scale-[1.03]"
+          >
+            {showAll ? "Hide the other certificates" : `Show ${certificates.length - programs.length} more certificates`}
+            <span className={`transition-transform ${showAll ? "rotate-180" : ""}`}>↓</span>
+          </button>
         </div>
 
-        {moreCount > 0 && (
-          <div className="mt-12">
-            <button
-              type="button"
-              onClick={() => setShowAll((s) => !s)}
-              className="flex items-center gap-2 rounded-full border border-line px-5 py-2.5 text-xs uppercase tracking-wider2 text-ink transition-colors hover:text-accent"
+        <AnimatePresence initial={false}>
+          {showAll && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              className="overflow-hidden"
             >
-              {showAll ? "Hide" : `Show ${moreCount} more`}
-              <span className={`transition-transform ${showAll ? "rotate-180" : ""}`}>↓</span>
-            </button>
+              <div className="pt-4">
+        <Reveal delay={1}>
+          <dl className="mt-8 grid grid-cols-3 gap-4 border-y border-line/60 py-6 md:max-w-xl">
+            {[
+              { k: "Certificates", v: `${certificates.length}` },
+              { k: "Professional programs", v: `${programs.length}` },
+              { k: "Issuers", v: `${wall.length}` },
+            ].map((x) => (
+              <div key={x.k}>
+                <dt className="text-[0.6rem] uppercase tracking-wider2 text-faint">{x.k}</dt>
+                <dd className="mt-1 font-serif text-3xl text-ink md:text-4xl">{x.v}</dd>
+              </div>
+            ))}
+          </dl>
+        </Reveal>
 
-            <AnimatePresence initial={false}>
-              {showAll && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                  className="overflow-hidden"
+        {/* Issuer logo wall: the big names, at a glance */}
+        <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+          {wall.slice(0, 10).map((w, i) => (
+            <Reveal key={w.brand} delay={i % 5}>
+              <TiltCard
+                glow={BRAND[w.brand].color}
+                max={12}
+                className="flex h-20 items-center justify-between gap-3 rounded-2xl border bg-surface/40 px-4 backdrop-blur-sm"
+                style={{ borderColor: `${BRAND[w.brand].color}44` }}
+              >
+                <div className="origin-left scale-[0.8]">
+                  <BrandLogo brand={w.brand} />
+                </div>
+                <span
+                  className="rounded-full px-2 py-0.5 text-[0.6rem] font-semibold"
+                  style={{ background: `${BRAND[w.brand].color}22`, color: BRAND[w.brand].color }}
                 >
-                  <div className="mt-8 flex flex-col gap-12">
-                    {moreBrands.map((b) => renderGroup(b, more[b]))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        )}
+                  {w.n}
+                </span>
+              </TiltCard>
+            </Reveal>
+          ))}
+        </div>
+              </div>
+              <div className="mt-12 flex flex-col gap-12 pb-2">
+                {topBrands.map((b) => renderGroup(b, top[b]))}
+                {moreBrands.map((b) => renderGroup(b, more[b]))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Detail popup -- shows the actual certificate image */}
