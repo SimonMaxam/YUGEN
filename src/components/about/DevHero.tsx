@@ -6,7 +6,6 @@ import Link from "next/link";
 import { useScroll, useMotionValueEvent, motion } from "framer-motion";
 import { HeroMobileStage } from "@/components/hero/HeroMobileStage";
 import { shouldAutoLoad3D, isTouchDevice } from "@/lib/device";
-import { useDeviceTiltRef, useGyroPermissionButton } from "@/lib/useDeviceTilt";
 
 const SushiScene = dynamic(() => import("@/components/three/SushiScene"), {
   ssr: false,
@@ -20,9 +19,9 @@ const profiles = [
 ];
 
 const chips = [
-  { text: "Built YŪGEN", x: "6%", y: "24%", depth: 26 },
-  { text: "Web · 3D · Design", x: "78%", y: "30%", depth: 40 },
-  { text: "Next.js · Three.js", x: "70%", y: "72%", depth: 18 },
+  { text: "Built YŪGEN", x: "6%", y: "24%", depth: 14 },
+  { text: "Web · 3D · Design", x: "78%", y: "30%", depth: 18 },
+  { text: "Next.js · Three.js", x: "70%", y: "72%", depth: 10 },
 ];
 
 /**
@@ -38,14 +37,8 @@ export function DevHero() {
   const pointer = useRef({ x: 0, y: 0 });
   const [mountScene, setMountScene] = useState(false);
   const [progress, setProgress] = useState(0);
-  const touch = useRef(false);
-  const [isTouch, setIsTouch] = useState(false);
-  const tilt = useDeviceTiltRef(true);
-  const { needsPrompt, request } = useGyroPermissionButton();
 
   useEffect(() => {
-    touch.current = isTouchDevice();
-    setIsTouch(touch.current);
     setMountScene(shouldAutoLoad3D());
   }, []);
 
@@ -58,14 +51,13 @@ export function DevHero() {
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (isTouchDevice()) return; // phones stay still: gyro parallax made the hero wobble
     let frame = 0;
     const cur = { x: 0, y: 0 };
     const tick = () => {
       frame = requestAnimationFrame(tick);
-      const tx = touch.current ? tilt.current.y : pointer.current.x;
-      const ty = touch.current ? tilt.current.x : pointer.current.y;
-      cur.x += (tx - cur.x) * 0.08;
-      cur.y += (ty - cur.y) * 0.08;
+      cur.x += (pointer.current.x - cur.x) * 0.05;
+      cur.y += (pointer.current.y - cur.y) * 0.05;
       layers.current.forEach((el) => {
         if (!el) return;
         const d = Number(el.dataset.depth ?? 0);
@@ -74,7 +66,7 @@ export function DevHero() {
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [tilt]);
+  }, []);
 
   function onMove(e: React.PointerEvent) {
     if (e.pointerType === "touch") return;
@@ -164,7 +156,7 @@ export function DevHero() {
 
         <h1
           ref={setLayer(3)}
-          data-depth={-10}
+          data-depth={-6}
           className="font-serif text-[clamp(3rem,min(14vw,19vh),10rem)] font-light leading-[0.86] tracking-tight text-ink"
         >
           <span className="block">SIMON</span>
@@ -226,15 +218,6 @@ export function DevHero() {
           ))}
         </motion.ul>
 
-        {needsPrompt && isTouch && (
-          <button
-            type="button"
-            onClick={request}
-            className="relative z-30 mt-5 rounded-full border border-accent/50 px-4 py-2 text-[0.62rem] uppercase tracking-wider2 text-accent-soft"
-          >
-            Tap to enable tilt
-          </button>
-        )}
       </div>
 
       <div className="pointer-events-none absolute bottom-7 left-1/2 z-30 flex -translate-x-1/2 flex-col items-center gap-2">

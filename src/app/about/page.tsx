@@ -68,7 +68,7 @@ const focus: { title: string; body: string; tools: string; color: string }[] = [
   },
   {
     title: "Cloud & AI",
-    body: "Certified in cloud architecture, data and deep learning by AWS, Google and IBM.",
+    body: "Certified by AWS, Google and IBM in cloud, data and AI. Every card below opens the real certificate.",
     tools: "AWS · Python · PyTorch · LangChain",
     color: "#34d399",
   },
@@ -87,9 +87,10 @@ function personSchema() {
     name: "Simon Maxam",
     givenName: "Simon",
     familyName: "Maxam",
-    jobTitle: "Web Developer, 3D Artist and Designer",
+    jobTitle: "Founder of Dokeon, Web Developer, 3D Artist and Designer",
     url: `${site.url}/about`,
     sameAs: profiles.map((x) => x.href),
+    worksFor: { "@type": "Organization", name: "Dokeon", url: "https://dokeon.pages.dev" },
     hasCredential: certificates.map((c) => {
       const v = c.blurb.match(/coursera\.org\/verify\/\S+/);
       return {
@@ -117,6 +118,7 @@ function personSchema() {
       "Next.js",
       "UI/UX Design",
       "Cloud Architecture on AWS",
+      "Digital Marketing",
       "Python",
       "Deep Learning",
       "Generative AI",
@@ -157,10 +159,19 @@ export default function AboutPage() {
             <div className="flex flex-col gap-6 text-base leading-relaxed text-muted md:text-lg">
               <p>
                 Hi, I&apos;m <strong className="text-ink">Simon Maxam</strong>, a
-                designer and developer based in{" "}
-                <strong className="text-ink">Calgary, Alberta, Canada</strong>,
-                with a passion for creating immersive digital experiences that
-                combine design, technology and storytelling.
+                web developer, 3D artist and designer based in{" "}
+                <strong className="text-ink">Calgary, Alberta, Canada</strong>, and
+                the founder of{" "}
+                <a
+                  href="https://dokeon.pages.dev"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-ink underline decoration-accent/60 underline-offset-4 hover:text-accent"
+                >
+                  Dokeon
+                </a>
+                , a creative and marketing agency. I build immersive websites
+                that combine design, technology and storytelling.
               </p>
               <p>
                 I specialise in <em className="not-italic text-ink">web design</em>,{" "}

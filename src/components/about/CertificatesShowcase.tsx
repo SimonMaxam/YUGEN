@@ -7,7 +7,6 @@ import { Reveal } from "@/components/ui/Reveal";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { certificates } from "@/lib/certificates";
 import { TiltCard } from "@/components/ui/TiltCard";
-import { useGyroPermissionButton } from "@/lib/useDeviceTilt";
 
 /* ---------------------------------------------------------------------------
    Certificates, grouped by ISSUER so the prestige reads instantly:
@@ -243,7 +242,6 @@ export function CertificatesShowcase() {
   const [active, setActive] = useState<number | null>(null);
   const [showAll, setShowAll] = useState(false);
   const activeCert = active !== null ? certificates[active] : null;
-  const { needsPrompt: needsGyroTap, request: requestGyro } = useGyroPermissionButton();
 
   // Ranked best -> worst by `tier` (see site.ts), then original order.
   const ranked = useMemo(() => {
@@ -374,7 +372,7 @@ export function CertificatesShowcase() {
         <SectionHeading
           kicker="Certified"
           title="Certificates"
-          lede="Simon Maxam's verified credentials from Google, Amazon Web Services, IBM, Microsoft, Adobe, GitHub, Siemens, Autodesk and the University of London. Tap any card to see the certificate."
+          lede="Simon Maxam's verified credentials from Google, Amazon Web Services, IBM, Microsoft, Adobe, GitHub, Siemens, Autodesk and the University of London. Tap any card to open the certificate and check it yourself."
         />
 
         <Reveal delay={1}>
@@ -415,16 +413,6 @@ export function CertificatesShowcase() {
             </Reveal>
           ))}
         </div>
-
-        {needsGyroTap && (
-          <button
-            type="button"
-            onClick={requestGyro}
-            className="mt-5 rounded-full border border-line px-4 py-2 text-[0.62rem] uppercase tracking-wider2 text-ink"
-          >
-            Tap to enable tilt
-          </button>
-        )}
 
         {/* PROFESSIONAL CERTIFICATES — the multi-course programs, in their own box.
             Neutral outer shell; each card carries its own issuer's colour and logo

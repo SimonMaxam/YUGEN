@@ -12,13 +12,13 @@ export function PortraitCard() {
   const mx = useMotionValue(0.5);
   const my = useMotionValue(0.5);
 
-  const rotX = useSpring(useTransform(my, [0, 1], [8, -8]), {
-    stiffness: 150,
-    damping: 18,
+  const rotX = useSpring(useTransform(my, [0, 1], [4, -4]), {
+    stiffness: 90,
+    damping: 20,
   });
-  const rotY = useSpring(useTransform(mx, [0, 1], [-8, 8]), {
-    stiffness: 150,
-    damping: 18,
+  const rotY = useSpring(useTransform(mx, [0, 1], [-4, 4]), {
+    stiffness: 90,
+    damping: 20,
   });
 
   function onMove(e: React.PointerEvent) {
