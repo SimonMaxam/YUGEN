@@ -11,7 +11,7 @@ export const serif = Cormorant_Garamond({
 /** Utility sans — kickers, nav, UI, body copy. */
 export const sans = Manrope({
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400", "500", "800"],
   variable: "--font-sans",
   display: "swap",
 });

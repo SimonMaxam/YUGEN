@@ -18,12 +18,6 @@ const profiles = [
   { label: "Instagram", href: "https://www.instagram.com/simonmaxam/" },
 ];
 
-const chips = [
-  { text: "Built YŪGEN", x: "6%", y: "24%", depth: 14 },
-  { text: "Web · 3D · Design", x: "78%", y: "30%", depth: 18 },
-  { text: "Next.js · Three.js", x: "70%", y: "72%", depth: 10 },
-];
-
 /**
  * Full-screen "who made this" hero for /about. It reuses the YŪGEN 3D scene from
  * the home page so anyone landing here from a search for "Simon Maxam" sees the
@@ -99,37 +93,9 @@ export function DevHero() {
         className="pointer-events-none absolute inset-0 z-[1]"
         style={{
           background:
-            "radial-gradient(90% 70% at 50% 35%, rgb(var(--glow)/0.55), transparent 65%), linear-gradient(to bottom, rgb(var(--c-bg)/0.35), rgb(var(--c-bg)/0.15) 40%, rgb(var(--c-bg)/0.92))",
+            "linear-gradient(to bottom, rgb(var(--c-bg)/0.55), rgb(var(--c-bg)/0.35) 40%, rgb(var(--c-bg)))",
         }}
       />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 z-[1] opacity-[0.16] mix-blend-screen"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgb(var(--c-accent)/0.5) 1px, transparent 1px), linear-gradient(90deg, rgb(var(--c-accent)/0.5) 1px, transparent 1px)",
-          backgroundSize: "64px 64px",
-          maskImage: "radial-gradient(70% 60% at 50% 40%, black, transparent)",
-          WebkitMaskImage: "radial-gradient(70% 60% at 50% 40%, black, transparent)",
-        }}
-      />
-
-      {/* floating badges: parallax with cursor / gyro */}
-      {chips.map((c, i) => (
-        <div
-          key={c.text}
-          ref={setLayer(i)}
-          data-depth={c.depth}
-          aria-hidden
-          className="pointer-events-none absolute z-10 hidden md:block"
-          style={{ left: c.x, top: c.y }}
-        >
-          <span className="inline-block rounded-full border border-accent/40 bg-elevated/40 px-4 py-2 font-mono text-[0.62rem] uppercase tracking-wider2 text-accent-soft backdrop-blur-md">
-            {c.text}
-          </span>
-        </div>
-      ))}
-
       {/* soft scrim so the copy stays readable over the sushi */}
       <div
         aria-hidden
@@ -148,8 +114,8 @@ export function DevHero() {
           className="mb-5 flex items-center gap-3"
         >
           <span className="h-px w-10 bg-accent/70" />
-          <span className="font-mono text-[0.68rem] uppercase tracking-ultra text-accent-soft">
-            The developer behind YŪGEN
+          <span className="font-sans text-[0.68rem] font-extrabold uppercase tracking-ultra text-ink">
+            Developer. 3D artist. Founder of Dokeon.
           </span>
           <span className="h-px w-10 bg-accent/70" />
         </motion.div>
@@ -157,15 +123,10 @@ export function DevHero() {
         <h1
           ref={setLayer(3)}
           data-depth={-6}
-          className="font-serif text-[clamp(3rem,min(14vw,19vh),10rem)] font-light leading-[0.86] tracking-tight text-ink"
+          className="font-sans text-[clamp(3.4rem,min(17vw,24vh),12rem)] font-extrabold uppercase leading-[0.82] tracking-[-0.04em] text-ink"
         >
-          <span className="block">SIMON</span>
-          <span
-            className="block text-transparent"
-            style={{ WebkitTextStroke: "1.5px rgb(var(--c-accent-soft))" }}
-          >
-            MAXAM
-          </span>
+          <span className="block">Simon</span>
+          <span className="block">Maxam</span>
         </h1>
 
         <motion.p
@@ -174,8 +135,7 @@ export function DevHero() {
           transition={{ duration: 0.8, delay: 0.5 }}
           className="mt-6 max-w-xl text-balance text-base leading-relaxed text-ink/85 md:text-lg"
         >
-          Web developer, 3D artist and musician in Calgary, Canada. I designed and built
-          this whole site: the walkable 3D room, the lighting and the soundtrack.
+          I build websites that people remember. I made every part of this site: the 3D room, the lighting and the sound.
         </motion.p>
 
         <motion.div
@@ -186,7 +146,7 @@ export function DevHero() {
         >
           <a
             href="#certificates"
-            className="inline-flex min-h-12 items-center justify-center rounded-full bg-accent px-9 py-4 text-[0.72rem] uppercase tracking-wider2 text-bg shadow-lg shadow-accent/30 transition-all duration-500 hover:brightness-110"
+            className="inline-flex min-h-12 items-center justify-center rounded-full bg-accent px-9 py-4 text-[0.72rem] font-extrabold uppercase tracking-wider2 text-bg transition-all duration-500 hover:bg-accent-soft"
           >
             See my certificates
           </a>

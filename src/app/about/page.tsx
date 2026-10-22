@@ -4,7 +4,6 @@ import { DevHero } from "@/components/about/DevHero";
 import { Reveal } from "@/components/ui/Reveal";
 import { PortraitCard } from "@/components/about/PortraitCard";
 import { CertificatesShowcase } from "@/components/about/CertificatesShowcase";
-import { TiltCard } from "@/components/ui/TiltCard";
 import { certificates } from "@/lib/certificates";
 import { site } from "@/lib/site";
 import { breadcrumbSchema } from "@/lib/schema";
@@ -149,8 +148,23 @@ export default function AboutPage() {
       <DevHero />
 
       <div className="mx-auto max-w-[1400px] px-5 pb-24 md:px-10 md:pb-36">
-        {/* Portrait + bio */}
-        <div className="grid items-start gap-12 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
+        {/* Big statement, then the portrait */}
+        <Reveal>
+          <p className="max-w-5xl font-sans text-[clamp(1.9rem,5vw,4.2rem)] font-extrabold leading-[1.02] tracking-[-0.03em] text-ink">
+            Web developer, 3D artist and designer in Calgary. Founder of{" "}
+            <a
+              href="https://dokeon.pages.dev"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline decoration-4 underline-offset-8 hover:text-muted"
+            >
+              Dokeon
+            </a>
+            .
+          </p>
+        </Reveal>
+
+        <div className="mt-16 grid items-start gap-12 md:grid-cols-[0.8fr_1.2fr] md:gap-20">
           <Reveal>
             <PortraitCard />
           </Reveal>
@@ -158,36 +172,16 @@ export default function AboutPage() {
           <Reveal delay={1}>
             <div className="flex flex-col gap-6 text-base leading-relaxed text-muted md:text-lg">
               <p>
-                Hi, I&apos;m <strong className="text-ink">Simon Maxam</strong>, a
-                web developer, 3D artist and designer based in{" "}
-                <strong className="text-ink">Calgary, Alberta, Canada</strong>, and
-                the founder of{" "}
-                <a
-                  href="https://dokeon.pages.dev"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-ink underline decoration-accent/60 underline-offset-4 hover:text-accent"
-                >
-                  Dokeon
-                </a>
-                , a creative and marketing agency. I build immersive websites
-                that combine design, technology and storytelling.
+                I&apos;m <strong className="text-ink">Simon Maxam</strong>. I build
+                immersive websites that mix design, technology and storytelling, and
+                I run Dokeon, a creative and marketing agency.
               </p>
               <p>
-                I specialise in <em className="not-italic text-ink">web design</em>,{" "}
-                <em className="not-italic text-ink">3D visualisation</em> and{" "}
-                <em className="not-italic text-ink">interactive experiences</em>,
-                blending creativity with modern development to build websites that
-                feel memorable and engaging. My goal is to create digital
-                experiences that are not only visually beautiful, but intuitive,
-                high-performing and meaningful.
+                My goal is simple: sites that look great, load fast and make people
+                remember you. Every page here, from the 3D room to the sound, was
+                designed and built by me.
               </p>
-              <p>
-                Every page here was designed and developed with care — from the
-                visual identity and interface to the animations and the responsive,
-                performant experience.
-              </p>
-              <dl className="grid grid-cols-2 gap-6 border-t border-line/60 pt-6 sm:grid-cols-4">
+              <dl className="grid grid-cols-2 gap-6 border-t border-line pt-6 sm:grid-cols-4">
                 {[
                   { k: "Based in", v: "Calgary" },
                   { k: "Guitar", v: "7 yrs" },
@@ -196,7 +190,7 @@ export default function AboutPage() {
                 ].map((x) => (
                   <div key={x.k}>
                     <dt className="text-[0.62rem] uppercase tracking-wider2 text-faint">{x.k}</dt>
-                    <dd className="mt-1 font-serif text-3xl text-ink">{x.v}</dd>
+                    <dd className="mt-1 font-sans text-3xl font-extrabold tracking-tight text-ink">{x.v}</dd>
                   </div>
                 ))}
               </dl>
@@ -207,7 +201,7 @@ export default function AboutPage() {
                     href={l.href}
                     target="_blank"
                     rel="me noopener noreferrer"
-                    className="rounded-full border border-line px-5 py-2.5 text-[0.68rem] uppercase tracking-wider2 text-ink transition-colors hover:border-accent hover:text-accent"
+                    className="rounded-full border border-ink/40 px-5 py-2.5 text-[0.68rem] font-extrabold uppercase tracking-wider2 text-ink transition-colors hover:bg-ink hover:text-bg"
                   >
                     {l.label} ↗
                   </a>
@@ -217,25 +211,21 @@ export default function AboutPage() {
           </Reveal>
         </div>
 
-        {/* What I do */}
-        <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {/* What I do: a plain numbered list */}
+        <ol className="mt-24 border-t border-line">
           {focus.map((f, i) => (
             <Reveal key={f.title} delay={(i % 4) + 1}>
-              <TiltCard
-                glow={f.color}
-                max={9}
-                className="h-full rounded-2xl border bg-surface/40 p-5 backdrop-blur-sm"
-                style={{ borderColor: `${f.color}44` }}
-              >
-                <h2 className="font-serif text-xl text-ink">{f.title}</h2>
-                <p className="mt-2 text-sm leading-snug text-muted">{f.body}</p>
-                <p className="mt-4 text-[0.6rem] uppercase tracking-wider2" style={{ color: f.color }}>
-                  {f.tools}
-                </p>
-              </TiltCard>
+              <li className="grid gap-3 border-b border-line py-7 md:grid-cols-[4rem_1fr_1.2fr_1fr] md:items-baseline md:gap-8">
+                <span className="font-sans text-sm font-extrabold text-faint">0{i + 1}</span>
+                <h2 className="font-sans text-3xl font-extrabold uppercase tracking-[-0.02em] text-ink md:text-4xl">
+                  {f.title}
+                </h2>
+                <p className="text-sm leading-snug text-muted md:text-base">{f.body}</p>
+                <p className="text-[0.6rem] uppercase tracking-wider2 text-faint md:text-right">{f.tools}</p>
+              </li>
             </Reveal>
           ))}
-        </div>
+        </ol>
       </div>
 
       {/* Credentials sit right under the intro, not at the bottom of the page */}
