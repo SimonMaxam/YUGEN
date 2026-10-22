@@ -89,7 +89,7 @@ function personSchema() {
     jobTitle: "Founder of Radoya, Web Developer, 3D Artist and Designer",
     url: `${site.url}/about`,
     sameAs: profiles.map((x) => x.href),
-    worksFor: { "@type": "Organization", name: "Radoya", url: "https://radoya.pages.dev" },
+    worksFor: { "@type": "Organization", name: "Radoya", url: "https://radoya.com" },
     hasCredential: certificates.map((c) => {
       const v = c.blurb.match(/coursera\.org\/verify\/\S+/);
       return {
@@ -153,7 +153,7 @@ export default function AboutPage() {
           <p className="max-w-5xl font-sans text-[clamp(1.9rem,5vw,4.2rem)] font-extrabold leading-[1.02] tracking-[-0.03em] text-ink">
             Web developer, 3D artist and designer in Calgary. Founder of{" "}
             <a
-              href="https://radoya.pages.dev"
+              href="https://radoya.com"
               target="_blank"
               rel="noopener noreferrer"
               className="underline decoration-4 underline-offset-8 hover:text-muted"
