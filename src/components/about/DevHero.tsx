@@ -115,7 +115,7 @@ export function DevHero() {
         >
           <span className="h-px w-10 bg-accent/70" />
           <span className="font-sans text-[0.68rem] font-extrabold uppercase tracking-ultra text-ink">
-            Developer. 3D artist. Founder of Dokeon.
+            Developer. 3D artist. Founder of Radoya.
           </span>
           <span className="h-px w-10 bg-accent/70" />
         </motion.div>
